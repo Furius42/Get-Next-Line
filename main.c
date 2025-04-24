@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 14:52:57 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/04/24 15:46:06 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/04/24 16:01:55 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,3 +42,7 @@ int	main(int argc, char *argv[])
 	close(fd);
 	return (0);
 }
+
+// testing git
+
+// test
