@@ -1,28 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   ft_strupcase.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/04/25 13:19:25 by vhoracek         ###   ########.fr       */
+/*   Created: 2025/03/24 13:04:17 by vhoracek          #+#    #+#             */
+/*   Updated: 2025/04/01 12:31:36 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./get_next_line.h"
+/*
+#include <stdio.h>
 
-void	*ft_memcpy(void *dest, const void *src, size_t n)
+char* ft_strupcase(char* str);
+
+int main(int argc, char* argv[])
 {
-	size_t	i;
+	if (argc != 2 )
+		printf("Usage: Input a string\n");
+	printf("Input : %s\n", argv[1]);
+	printf("Output: %s\n", ft_strupcase(ft_bitoa(ft_atoi(argv[1]),16)));
+	return (0);
+}
+*/
+char	*ft_strupcase(char *str)
+{
+	char	*start;
 
-	if (NULL == dest && NULL == src && n > 0)
-		return (NULL);
-	i = 0;
-	while (i < n)
+	start = str;
+	while (*str)
 	{
-		((unsigned char *)dest)[i] = ((const unsigned char *)src)[i];
-		i++;
+		if (*str >= 'a' && *str <= 'z')
+			*str -= 32;
+		++str;
 	}
-	return (dest);
+	return (start);
 }

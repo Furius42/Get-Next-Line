@@ -1,28 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   ft_isspace.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/04/25 13:19:25 by vhoracek         ###   ########.fr       */
+/*   Created: 2025/01/17 11:23:53 by vhoracek          #+#    #+#             */
+/*   Updated: 2025/01/17 11:24:15 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./get_next_line.h"
-
-void	*ft_memcpy(void *dest, const void *src, size_t n)
+int	ft_isspace(int ch)
 {
-	size_t	i;
-
-	if (NULL == dest && NULL == src && n > 0)
-		return (NULL);
-	i = 0;
-	while (i < n)
-	{
-		((unsigned char *)dest)[i] = ((const unsigned char *)src)[i];
-		i++;
-	}
-	return (dest);
+	return (ch == ' ' || (ch >= 9 && ch <= 13));
 }
