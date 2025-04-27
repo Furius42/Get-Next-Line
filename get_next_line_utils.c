@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/04/25 13:19:25 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/04/27 17:57:55 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,4 +25,47 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 		i++;
 	}
 	return (dest);
+}
+
+char	*compose_line(int fd)
+{
+
+	ssize_t		bytes_read;
+	size_t		len;
+	char		buf[BUFFER_SIZE];
+	buf_node	*current;
+
+	current = NULL;
+	while (current)
+	{
+		
+		current = current->next;
+	}
+}
+
+size_t	ft_strlen(const char *s)
+{
+	size_t	len;
+
+	len = 0;
+	while (s[len] != '\0')
+		len++;
+	return (len);
+}
+
+char	*parse(char *dst, const char *src, size_t dstsize)
+{
+	size_t	src_len;
+	size_t	i;
+
+	src_len = 0;
+	while (src[src_len] != '\0')
+		src_len++;
+	i = 0;
+	if (dstsize > 0)
+	{
+		while (i < dstsize - 1 && src[i] != '\0')
+			dst[i] = src[i++];
+	}
+	return (dst[i]);
 }
