@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:54:27 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/04/27 18:06:54 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/04/28 23:30:40 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@
 #endif
 
 # include <stdio.h>		// printf
-# include <unistd.h>	// open
+# include <unistd.h>	// read
 # include <stdlib.h>	// malloc, free
-# include <fcntl.h>		// For open()
 # include <errno.h>		// errno
 # include <stddef.h>	// size_t
+# include <fcntl.h>
 
 typedef struct
 {
