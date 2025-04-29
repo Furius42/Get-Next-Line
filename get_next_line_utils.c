@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/04/27 17:57:55 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/04/29 18:04:55 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,15 @@ char	*parse(char *dst, const char *src, size_t dstsize)
 			dst[i] = src[i++];
 	}
 	return (dst[i]);
+}
+
+buf_node	*add_node()
+{
+	buf_node	*node;
+	
+	node = malloc(sizeof(buf_node));
+	if (node == NULL)
+		return (1);
+	node->next = NULL;
+	return (node);
 }
