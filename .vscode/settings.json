@@ -3,5 +3,7 @@
 		"unistd.h": "c",
 		"get_next_line.h": "c"
 	},
-	"C_Cpp.errorSquiggles": "enabled"
+	"C_Cpp.errorSquiggles": "enabled",
+	"42header.email": "vhoracek@student.42prague.com",
+	"42header.username": "vhoracek"
 }

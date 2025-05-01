@@ -27,22 +27,6 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (dest);
 }
 
-char	*compose_line(int fd)
-{
-
-	ssize_t		bytes_read;
-	size_t		len;
-	char		buf[BUFFER_SIZE];
-	buf_node	*current;
-
-	current = NULL;
-	while (current)
-	{
-		
-		current = current->next;
-	}
-}
-
 size_t	ft_strlen(const char *s)
 {
 	size_t	len;
@@ -58,15 +42,11 @@ char	*parse(char *dst, const char *src, size_t dstsize)
 	size_t	src_len;
 	size_t	i;
 
-	src_len = 0;
-	while (src[src_len] != '\0')
-		src_len++;
+	src_len = ft_strlen(src);
 	i = 0;
-	if (dstsize > 0)
-	{
+	if (dstsize > 0)//			see if norm takes it//
 		while (i < dstsize - 1 && src[i] != '\0')
 			dst[i] = src[i++];
-	}
 	return (dst[i]);
 }
 
@@ -75,7 +55,7 @@ buf_node	*add_node()
 	buf_node	*node;
 	
 	node = malloc(sizeof(buf_node));
-	if (node == NULL)
+	if (NULL == node)
 		return (1);
 	node->next = NULL;
 	return (node);

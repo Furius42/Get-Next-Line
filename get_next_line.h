@@ -37,7 +37,7 @@ typedef struct s_buffer
 }buf_node;
 
 char	*get_next_line(int fd);
-char	*compose_line(int fd);
+char	*compose_line(int fd, char *start);
 size_t	ft_strlen(const char *s);
 char	*parse(char *dst, const char *src, size_t dstsize);
 

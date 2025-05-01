@@ -12,7 +12,7 @@
 
 #include "./get_next_line.h"
 
-char	*compose_line(int fd);
+char	*compose_line(int fd, char *start);
 char	*get_next_line(int fd)
 {
 	static fd_list	file_states;//	array to hold FDs and the *l_next (pointer to next line) of that FD
@@ -20,9 +20,9 @@ char	*get_next_line(int fd)
 	int				current_fd;//	ssizet to accomodate -1 ??
 	int				i;
 
-	if (fd == 0)
-		return (compose_line(0));
-	i = 0;
+	// check if FD links an actual source..
+
+		i = 0;
 	while(file_states.fd[i])
 	{
 		if (fd == file_states.fd[i++])
@@ -37,7 +37,7 @@ char	*get_next_line(int fd)
 	return (l_next);
 }
 
-char	*compose_line(int fd)
+char	*compose_line(int fd, char *start)
 {
 	ssize_t		bytes_read;
 	size_t		len;
