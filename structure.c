@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 00:03:29 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/02 01:30:17 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/04 15:12:11 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,3 +61,19 @@ typedef struct s_fd_buffer {
 buf_node fd_list;
 
 fd_list = NULL;
+
+int fd = 0;
+current = add_node(fd);
+
+main -> get_next_line(fd)
+
+get_next_line(fd)
+	fd <= 0 ? return(NULL) : return(compose_line(get_node(fd)));
+
+buf_node	*get_node(int fd)
+{
+	while (fd != current->fd)
+		current = current.next;
+	if (current->next == NULL)
+		current->next = add_node(fd)
+}
