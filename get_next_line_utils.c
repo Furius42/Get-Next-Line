@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/04 18:03:03 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/04 23:22:46 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,15 +70,37 @@ char	*parse(char *dst, const char *src, size_t dstsize)
 	return (dst[i]);
 }
 
-buf_node	*add_node(fd)
+buf_node	*node_ops(buf_node *current, int fd, char option)
 {
 	buf_node	*node;
-	
+
+	if (option == 'd') // delete current, return pointer to the current->next
+	{
+		node = current->next;
+		free (current);
+		return (node);
+	}
 	node = calloc(1, sizeof(buf_node));// fill with zeros
 	if (NULL == node)
 		return (1);
 	node->buf_len = BUFFER_SIZE;
-	node->next = NULL;
 	node->fd = fd;
+	if (option == 'a')
+		node->next = NULL;
+	else if (option == 'i')
+	{
+		node->next = current->next;
+		current->next = node;
+	}
 	return (node);
+}
+
+buf_node	*get_first(buf_node *current, int fd) // give head as first argument! ! !! 
+{
+	buf_node	*first_buf;
+
+	while (current->fd != fd)
+		current = current->next;
+	first_buf = current;
+	return (first_buf);
 }

@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:54:27 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/04 17:25:55 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/04 22:25:12 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,20 +22,7 @@
 # include <stdio.h>		// printf
 # include <unistd.h>	// read
 # include <errno.h>		// errno
-# include <fcntl.h>
-/*
-typedef struct
-{
-	int		fd[127];
-	char	*l_start[127];
-}fd_list;
-
-typedef struct s_buffer
-{
-	char	buf[BUFFER_SIZE];
-	struct	s_buffer	*next;
-}buf_node;
-*/
+# include <fcntl.h>		// file open flags
 
 typedef struct s_fd_buffer {
     int fd;

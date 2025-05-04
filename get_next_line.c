@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:51:18 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/04 18:19:00 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/04 23:26:07 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*get_next_line(int fd)
 {
 	static buf_node	*head;//	array to hold FDs and the *l_next (pointer to next line) of that FD
 
-	return (compose_line(get_node(head, fd)));
+	return (compose_line(get_node(head, fd))); // PASS HEAD TO COMPOSE_LINE TO BE ABLE TO ITERATE
 }
 
 buf_node	*get_node(buf_node *current, int fd)
@@ -31,36 +31,46 @@ buf_node	*get_node(buf_node *current, int fd)
 		else
 			current = current->next;
 	}
-	return (add_node(fd));
+	return (node_ops(current, fd, 'a'));
 }
 
 char	*compose_line(buf_node *current)
 {
-char	*line;
-int		batch;
-int		bytes_read;
-int		len;
+char		*line;
+int			batch_no;
+int			bytes_read;
+int			len;
 
-bytes_read = read(current->fd,current->buf, BUFFER_SIZE - current->buf_len);
-len = linelen(current->buf, '\n', bytes_read + current->buf_len);
+batch_no = 0; // if (len % BUFFER_SIZE ==  0 && len / BUFFER_SIZE != 0 ) {}
+while (1)
+{
+bytes_read = read(current->fd, current->buf, BUFFER_SIZE - current->buf_len);
+current->buf_len += bytes_read;
+len = linelen(current->buf, '\n', current->buf_len); // line length limited by EOF(calculated) or determined by '\n' character
 
-while (len = BUFFER_SIZE)// no \n found in this batch
-	add_line() = malloc(sizeof(char) * BUFFER_SIZE + 1); // if line longer than buffer - linked list or dynamic array??
-	
+if (len = BUFFER_SIZE || len < )// no \n found in this batch
+	current = node_ops(current, current->fd, 'i');
+	batch_no ++;
+}
+
 current->buf_len = bytes_read - len;
-line = malloc(len * batch * sizeof(char) + 1);
-while (batch --)
-	ft_memcpy(line + BUFFER_SIZE * batch/*invert*/, current->buf, len);
-	return (line);
+line = malloc(len * batch_no * sizeof(char) + 1);
+while (batch_no --)
+	ft_memcpy(line + (BUFFER_SIZE * batch_no)/*invert*/, current->buf, len);
+return (line);
+}
+
+/*
+
+//insert node
+buf_node	*new_node;
+new_node = malloc(sizeof(buf_node));
+
+new_node->next = current->next;
+current->next = node_ops(current->fd);
 
 
-
-
-
-
-
-
-
+*/
 
 
 
@@ -75,9 +85,9 @@ while (bytes_read < BUFFER_SIZE) // read till EOF .. if read returns a value sma
 	}
 
 
-if (!(line = malloc(BUFFER_SIZE * batch + current->buf_len + 1)))
+if (!(line = malloc(BUFFER_SIZE * batch_no + current->buf_len + 1)))
 	return (0);
-}
+
 /* read from fd till \0 or BUFFER_SIZE.if \0 not found, make new node, repeat(batch++). once \0 found, alloc line(depending on number of itterations + read return val (bytes_read )) and return
 	while (current)
 	{
