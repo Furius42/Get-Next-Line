@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:51:18 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/04 23:26:07 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/06 23:52:13 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,26 +37,26 @@ buf_node	*get_node(buf_node *current, int fd)
 char	*compose_line(buf_node *current)
 {
 char		*line;
-int			batch_no;
 int			bytes_read;
 int			len;
 
-batch_no = 0; // if (len % BUFFER_SIZE ==  0 && len / BUFFER_SIZE != 0 ) {}
+len = 0;
 while (1)
 {
 bytes_read = read(current->fd, current->buf, BUFFER_SIZE - current->buf_len);
 current->buf_len += bytes_read;
-len = linelen(current->buf, '\n', current->buf_len); // line length limited by EOF(calculated) or determined by '\n' character
+len += linelen(current->buf, '\n', current->buf_len); // line length limited by EOF(calculated) or determined by '\n' character
 
-if (len = BUFFER_SIZE || len < )// no \n found in this batch
+if (len = BUFFER_SIZE)// no \n found in this batch
 	current = node_ops(current, current->fd, 'i');
-	batch_no ++;
 }
 
 current->buf_len = bytes_read - len;
-line = malloc(len * batch_no * sizeof(char) + 1);
-while (batch_no --)
-	ft_memcpy(line + (BUFFER_SIZE * batch_no)/*invert*/, current->buf, len);
+line = malloc(len * sizeof(char) + 1);
+
+
+while (len - BUFFER_SIZE > 0) 
+	ft_memcpy(line , current->buf, len);
 return (line);
 }
 
