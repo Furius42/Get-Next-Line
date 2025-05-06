@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:54:27 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/04 22:25:12 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/07 00:50:47 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,20 @@
 # define BUFFER_SIZE 1024
 #endif
 
+#ifndef MAX_FDS
+# define MAX_FDS 128
+#endif
+
 # include <stdlib.h>	// malloc, free
 # include <stddef.h>	// size_t
 # include <stdio.h>		// printf
 # include <unistd.h>	// read
 # include <errno.h>		// errno
 # include <fcntl.h>		// file open flags
+
+typedef struct s_fd_list {
+	buf_node *head;
+} fd_list;
 
 typedef struct s_fd_buffer {
     int fd;

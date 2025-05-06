@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:51:18 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/06 23:52:13 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/07 01:07:26 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,24 @@
 
 buf_node	*get_node(buf_node *current, int fd);
 char	*compose_line(buf_node *current);
-
 char	*get_next_line(int fd)
 {
-	static buf_node	*head;//	array to hold FDs and the *l_next (pointer to next line) of that FD
+	static fd_list	*fd_buffers[MAX_FDS];//	array of buf_node heads for each FD (set max as pleased)
 
-	return (compose_line(get_node(head, fd))); // PASS HEAD TO COMPOSE_LINE TO BE ABLE TO ITERATE
+	return (compose_line(get_node(fd_buffers[0], fd))); // PASS HEAD TO COMPOSE_LINE TO BE ABLE TO ITERATE
 }
 
-buf_node	*get_node(buf_node *current, int fd)
+buf_node	*get_node(fd_list list, int fd)
 {
+	int	i;
+
+	i = 0;
 	while (current)
 	{
 		if (current->fd == fd)
 			return(current);
 		else
-			current = current->next;
+			current = *fd_buffers[i]
 	}
 	return (node_ops(current, fd, 'a'));
 }
@@ -39,8 +41,10 @@ char	*compose_line(buf_node *current)
 char		*line;
 int			bytes_read;
 int			len;
+buf_node 	*fd_head;
 
 len = 0;
+fd_head = current;
 while (1)
 {
 bytes_read = read(current->fd, current->buf, BUFFER_SIZE - current->buf_len);
@@ -54,9 +58,13 @@ if (len = BUFFER_SIZE)// no \n found in this batch
 current->buf_len = bytes_read - len;
 line = malloc(len * sizeof(char) + 1);
 
-
+current = fd_head;
 while (len - BUFFER_SIZE > 0) 
+	{
 	ft_memcpy(line , current->buf, len);
+	current =  node_ops(current, NULL, 'd');
+	}
+fd_head->buf_len = BUFFER_SIZE - (len % BUFFER_SIZE);	
 return (line);
 }
 
