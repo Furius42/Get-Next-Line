@@ -6,32 +6,33 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:51:18 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/07 01:07:26 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/08 23:55:28 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./get_next_line.h"
 
-buf_node	*get_node(buf_node *current, int fd);
+buf_node	*get_node(fd_list *fd_buffers, int fd);
 char	*compose_line(buf_node *current);
 char	*get_next_line(int fd)
 {
 	static fd_list	*fd_buffers[MAX_FDS];//	array of buf_node heads for each FD (set max as pleased)
 
-	return (compose_line(get_node(fd_buffers[0], fd))); // PASS HEAD TO COMPOSE_LINE TO BE ABLE TO ITERATE
+	return (compose_line(get_node(fd_buffers, fd))); // PASS HEAD TO COMPOSE_LINE TO BE ABLE TO ITERATE
 }
 
-buf_node	*get_node(fd_list list, int fd)
+buf_node	*get_node(fd_list *fd_buffers, int fd)
 {
-	int	i;
-
+	int			i;
+	buf_node	*current;
 	i = 0;
+	current = fd_buffers[i].head;
 	while (current)
 	{
 		if (current->fd == fd)
 			return(current);
 		else
-			current = *fd_buffers[i]
+			current = *fd_buffers[i].head;
 	}
 	return (node_ops(current, fd, 'a'));
 }
