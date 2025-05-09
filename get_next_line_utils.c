@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/04 23:22:46 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/09 00:55:09 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,12 @@ buf_node	*node_ops(buf_node *current, int fd, char option)
 	}
 	node = calloc(1, sizeof(buf_node));// fill with zeros
 	if (NULL == node)
-		return (1);
+		return (NULL);
 	node->buf_len = BUFFER_SIZE;
 	node->fd = fd;
-	if (option == 'a')
+	if (option == 'i')// INITIALIZE Head Node 
 		node->next = NULL;
-	else if (option == 'i')
+	else if (option == 'a')// APPEND Node / insert
 	{
 		node->next = current->next;
 		current->next = node;
