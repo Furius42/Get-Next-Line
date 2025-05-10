@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:51:18 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/09 04:10:13 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/10 14:08:23 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@ char	*compose_line(buf_node *current)
 	}
 
 	current->buf_len = bytes_read - len % BS;
-	line = malloc(len * sizeof(char) + 1);
+	if(!(line = malloc(len * sizeof(char) + 1)))
+		return (NULL);
 
 	current = fd_head;
 	while (i * BS < len) 
@@ -72,24 +73,10 @@ char	*compose_line(buf_node *current)
 		ft_memcpy(line + BS * i++, current->buf, (len % BS) + (BS - (len % BS)) * (i < len / BS));
 		current = node_ops(current, NULL, 'd');
 		}
-	fd_head->buf_len = BS - (len % BS);	//// move the rest of the buffer to the beginning of the buffer and make the current node the head if it isnt already..//
-	return (line);
+	ft_memcpy(fd_head->buf, fd_head->buf + (len % BS), current->buf_len); //	move the rest of buff to zero
+	return (line); //	NULL TERMINATE THE LINE! ! ! !! 
 }
-/*
-
-//insert node
-buf_node	*new_node;
-new_node = malloc(sizeof(buf_node));
-
-new_node->next = current->next;
-current->next = node_ops(current->fd);
-
-
-*/
-
-
-
-
+// ! !! KEEP track of available space in buf for next read (buf_free)
 
 
 while (bytes_read < BS) // read till EOF .. if read returns a value smaller than buffer size, it means there is EOF within the buffer.
@@ -98,10 +85,6 @@ while (bytes_read < BS) // read till EOF .. if read returns a value smaller than
 		if (len < BS)
 			if (line = malloc(sizeof(char) * len + 1))
 	}
-
-
-if (!(line = malloc(BS * batch_no + current->buf_len + 1)))
-	return (0);
 
 /* read from fd till \0 or BS.if \0 not found, make new node, repeat(batch++). once \0 found, alloc line(depending on number of itterations + read return val (bytes_read )) and return
 	while (current)
@@ -118,8 +101,3 @@ if (!(line = malloc(BS * batch_no + current->buf_len + 1)))
 		return (0);
 	//iterate linked list and parse buffer batches-- 
 */
-
-load buff in full.  read(fd, buf, buf_free - 0)
-take line...
-move the rest of buff to zero
-keep track of available space in buf for next read (buf_free)
