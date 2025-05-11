@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:51:18 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/11 16:25:05 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/11 17:22:00 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ buf_node	*get_node(fd_list *fd_buffers, int fd);
 char	*compose_line(buf_node *current);
 char	*get_next_line(int fd)
 {
-	static fd_list	*fd_buffers[MAX_FDS];//	array of buf_node heads for each FD (set max as pleased)
+	static fd_list	fd_buffers[MAX_FDS];//	array of buf_node heads for each FD (set max as pleased)
 
 	return (compose_line(get_node(fd_buffers, fd))); // PASS HEAD TO COMPOSE_LINE TO BE ABLE TO ITERATE
 }
@@ -69,8 +69,9 @@ char	*compose_line(buf_node *current)
 	current = fd_head;
 	while (i * BS < len) 
 		{
-		ft_memcpy(line + BS * i++, current->buf, (len % BS) + (BS - (len % BS)) * (i < len / BS));
-		current = node_ops(current, NULL, 'd');
+		ft_memcpy(line + BS * i, current->buf, (len % BS) + (BS - (len % BS)) * (len / BS > i));
+		i++;
+		current = node_ops(current, current->fd, 'd');
 		}
 	ft_memcpy(fd_head->buf, fd_head->buf + (len % BS), current->buf_len); //	move the rest of buff to zero
 	line[len] = '\0';

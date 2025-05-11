@@ -6,11 +6,24 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/11 16:35:02 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/11 17:00:07 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./get_next_line.h"
+
+void	*ft_memset(void *s, int c, size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < n)
+	{
+		((unsigned char *)s)[i] = c;
+		i++;
+	}
+	return (s);
+}
 
 void	*ft_calloc(size_t nmemb, size_t size)
 {
@@ -36,7 +49,7 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
 	size_t	i;
 
-	if (NULL == dest || NULL == src && n > 0)
+	if (NULL == dest || (NULL == src && n > 0))
 		return (NULL);
 	i = 0;
 	while (i < n)
@@ -47,7 +60,7 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (dest);
 }
 // call with char term = 10 for '\n' || is limited by max_len. Keeping current buffer length as maximum
-size_t	linelen(const char *s, char term, int max_len)
+size_t	linelen(const char *s, char term, size_t max_len)
 {
 	size_t	len;
 
