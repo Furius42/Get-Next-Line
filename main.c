@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 14:52:57 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/04/28 19:45:21 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/11 16:42:30 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ int	main(int argc, char *argv[])
 	int		fd;
 	
 	if (argc != 2)
-		return(printf("Give 1 argument: File name to get next line from. Else lorem will be used.\n\n"));
-	input = *argv[1];
-	if (input == "0")
+		return(printf("Give 1 argument: File name to get next line from or '0' for STDIN. Else lorem will be used.\n\n"));
+	input = argv[1];
+	if (*input == '0')
 		fd = 0;
 	else 
 	{

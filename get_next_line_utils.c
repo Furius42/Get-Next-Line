@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/09 00:55:09 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/11 16:35:02 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
 	size_t	i;
 
-	if (NULL == dest && NULL == src && n > 0)
+	if (NULL == dest || NULL == src && n > 0)
 		return (NULL);
 	i = 0;
 	while (i < n)
@@ -57,18 +57,6 @@ size_t	linelen(const char *s, char term, int max_len)
 	return (len);
 }
 
-char	*parse(char *dst, const char *src, size_t dstsize)
-{
-	size_t	src_len;
-	size_t	i;
-
-	src_len = ft_strlen(src);
-	i = 0;
-	if (dstsize > 0)//			see if norm takes it//
-		while (i < dstsize - 1 && src[i] != '\0')
-			dst[i] = src[i++];
-	return (dst[i]);
-}
 
 buf_node	*node_ops(buf_node *current, int fd, char option)
 {
@@ -93,14 +81,4 @@ buf_node	*node_ops(buf_node *current, int fd, char option)
 		current->next = node;
 	}
 	return (node);
-}
-
-buf_node	*get_first(buf_node *current, int fd) // give head as first argument! ! !! 
-{
-	buf_node	*first_buf;
-
-	while (current->fd != fd)
-		current = current->next;
-	first_buf = current;
-	return (first_buf);
 }

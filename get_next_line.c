@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:51:18 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/10 14:08:23 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/11 16:25:05 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,19 +51,18 @@ char	*compose_line(buf_node *current)
 	len = 0;
 	i = 0;
 	fd_head = current;
-	while (1)
+	while ((bytes_read = read(current->fd, current->buf, BS - current->buf_len)) > 0)
 	{
-		bytes_read = read(current->fd, current->buf, BS - current->buf_len);
 		current->buf_len += bytes_read;
 		len += linelen(current->buf, '\n', current->buf_len); // line length limited by EOF(calculated) or determined by '\n' character
 
-		if (len % BS)// no \n found in this batch
-			current = node_ops(current, current->fd, 'a');
-		else
+		if (len % BS == 0)// IF Buffer loaded in full since no \n nor EOF found in this batch
+			current = node_ops(current, current->fd, 'a');//append node, set it to current if buffer fully loaded, no EOF nor \n found
+		else//Found \n or EOF in this node->buf
 			break;
 	}
 
-	current->buf_len = bytes_read - len % BS;
+	current->buf_len = bytes_read - len % BS; // Set the size of future head's buffer to accomodate characters remaining after line extraction.
 	if(!(line = malloc(len * sizeof(char) + 1)))
 		return (NULL);
 
@@ -74,30 +73,6 @@ char	*compose_line(buf_node *current)
 		current = node_ops(current, NULL, 'd');
 		}
 	ft_memcpy(fd_head->buf, fd_head->buf + (len % BS), current->buf_len); //	move the rest of buff to zero
-	return (line); //	NULL TERMINATE THE LINE! ! ! !! 
+	line[len] = '\0';
+	return (line);
 }
-// ! !! KEEP track of available space in buf for next read (buf_free)
-
-
-while (bytes_read < BS) // read till EOF .. if read returns a value smaller than buffer size, it means there is EOF within the buffer.
-	{
-		len = linelen(current->buf, '\n', bytes_read);
-		if (len < BS)
-			if (line = malloc(sizeof(char) * len + 1))
-	}
-
-/* read from fd till \0 or BS.if \0 not found, make new node, repeat(batch++). once \0 found, alloc line(depending on number of itterations + read return val (bytes_read )) and return
-	while (current)
-	{
-		read(fd,current->buf, BS - 1);
-		// len = ft_strlen(current->buf)  ... . or ... if buffer fully loaded just add counter to batch, else use bytes_read
-		line = parse(current->buf, line, len);
-		
-		current = current->next;
-		++batch;
-	}
-
-	if (!(line = malloc(BS * batch + len + 1)))
-		return (0);
-	//iterate linked list and parse buffer batches-- 
-*/

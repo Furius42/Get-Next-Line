@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 00:03:29 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/04 15:12:11 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/11 16:25:17 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,3 +77,29 @@ buf_node	*get_node(int fd)
 	if (current->next == NULL)
 		current->next = add_node(fd)
 }
+
+// ! !! KEEP track of available space in buf for next read (buf_free)
+
+/* 
+while (bytes_read < BS) // read till EOF .. if read returns a value smaller than buffer size, it means there is EOF within the buffer.
+	{
+		len = linelen(current->buf, '\n', bytes_read);
+		if (len < BS)
+			if (line = malloc(sizeof(char) * len + 1))
+	}
+ */
+/* read from fd till \0 or BS.if \0 not found, make new node, repeat(batch++). once \0 found, alloc line(depending on number of itterations + read return val (bytes_read )) and return
+	while (current)
+	{
+		read(fd,current->buf, BS - 1);
+		// len = ft_strlen(current->buf)  ... . or ... if buffer fully loaded just add counter to batch, else use bytes_read
+		line = parse(current->buf, line, len);
+		
+		current = current->next;
+		++batch;
+	}
+
+	if (!(line = malloc(BS * batch + len + 1)))
+		return (0);
+	//iterate linked list and parse buffer batches-- 
+*/

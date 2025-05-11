@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:54:27 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/09 01:50:18 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/11 16:30:16 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #endif
 
 #ifndef MAX_FDS
-# define MAX_FDS 128
+# define MAX_FDS 128//	per process soft limit in Linux is 1024 // 
 #endif
 
 # include <stdlib.h>	// malloc, free
@@ -28,21 +28,23 @@
 # include <errno.h>		// errno
 # include <fcntl.h>		// file open flags
 
+typedef struct s_fd_buffer {
+	int					fd;
+	char				buf[BUFFER_SIZE];  // +1 for null-termination safety
+	ssize_t				buf_len;
+	struct s_fd_buffer	*next;
+} buf_node;
+
 typedef struct s_fd_list {
 	buf_node *head;
 } fd_list;
 
-typedef struct s_fd_buffer {
-    int fd;
-    char buf[BUFFER_SIZE + 1];  // +1 for null-termination safety
-    ssize_t buf_len;
-    struct s_fd_buffer *next;
-} buf_node;
-
-
-char	*get_next_line(int fd);
-char	*compose_line(buf_node *current);
-size_t	ft_strlen(const char *s);
-char	*parse(char *dst, const char *src, size_t dstsize);
+void		*ft_memcpy(void *dest, const void *src, size_t n);
+void		*ft_calloc(size_t nmemb, size_t size);
+char		*get_next_line(int fd);
+buf_node	*get_node(fd_list *fd_buffers, int fd);
+char		*compose_line(buf_node *current);
+buf_node	*node_ops(buf_node *current, int fd, char option);
+size_t		linelen(const char *s, char term, int max_len);
 
 #endif
