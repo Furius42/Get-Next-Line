@@ -6,12 +6,14 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 14:52:57 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/11 17:37:39 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/12 18:52:33 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fcntl.h>
 #include <stdio.h>
+#include <errno.h>
+#include <string.h>
 #include "./get_next_line.h"
 
 int	main(int argc, char *argv[])
@@ -30,20 +32,21 @@ int	main(int argc, char *argv[])
 	fd = open(input, O_RDONLY);
 	if (fd == -1)
 		{
-		perror("Open failed. Falling back to lorem.txt");
-		fd = open("./lorem.txt", O_RDONLY);
+		fprintf(stderr, "Opening %s failed. Reason: %s\n", input, strerror(errno));
+		fd = open("lorem.txt", O_RDONLY);
 			if (fd == -1)
 			{
-				perror("Opening lorem.txt failed. Falling back to STDIN (fd 0)");
+				perror("Opening lorem.txt failed. Falling back to STDIN (fd 0). Reason");
 				fd = 0;
 			}
 		}
 	}
-	while((line = get_next_line(fd)) != NULL)
+	while((line = get_next_line(fd)))
 	{
 		printf("%s", line);
 		free(line);
 	}
 	close(fd);
+	printf("==FINISHED==");
 	return (0);
 }
