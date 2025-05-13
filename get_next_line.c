@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:51:18 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/12 19:09:47 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/13 01:08:53 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,15 @@ static buf_node	*get_node(fd_list *fd_buffers, int fd)
 	buf_node	*current;
 	i = 0;
 	current = fd_buffers[i].head;
+	if (current = NULL)
+		return (node_ops(current, fd, 'i'));
 	while (current && i < MAX_FDS)
 	{
 		if (current->fd == fd)
 			{
-			if (current->buf_len == 0)
+/* 			if (current->buf == 0)
 				return(node_ops(current, fd, 'd'));
-			else
+			else */
 				return(current);
 			}
 		else
@@ -61,7 +63,7 @@ static char	*compose_line(buf_node *current)
 			break;
 	}
 	if ((current->buf_len == 0 && bytes_read == 0) || bytes_read < 0 )// Check: read FAIL or EOF
-		return (NULL);
+		return ((char*)node_ops(current, current->fd, 'd')); // delete node head on EOF or FAIL
 	current->buf_len = bytes_read - len % BS; // Set the size of future head's buffer to accomodate characters remaining after line extraction.
 	if(!(line = malloc(len * sizeof(char) + 1)))
 		return (NULL);
@@ -83,7 +85,7 @@ char	*get_next_line(int fd)
 	buf_node	*node;
 
 	node = get_node(fd_buffers, fd);
-	printf("step \n \n");
+	printf("step\n");
 	line = compose_line(node);
 	return (line); // PASS HEAD TO COMPOSE_LINE TO BE ABLE TO ITERATE // return (compose_line(get_node(fd_buffers, fd)));
 }

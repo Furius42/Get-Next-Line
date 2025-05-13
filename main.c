@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 14:52:57 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/12 18:52:33 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/13 01:11:49 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,12 @@ int	main(int argc, char *argv[])
 			}
 		}
 	}
+	int i = 0;
 	while((line = get_next_line(fd)))
 	{
-		printf("%s", line);
+		printf("this is the line: %s \n", line);
 		free(line);
+		printf("line %i\n", i++);
 	}
 	close(fd);
 	printf("==FINISHED==");
