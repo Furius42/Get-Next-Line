@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:54:27 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/12 18:54:49 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/14 02:19:22 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,10 @@
 # define BUFFER_SIZE 1024
 #endif
 
+/*
 #ifndef MAX_FDS
 # define MAX_FDS 1024//	per process soft limit in Linux is 1024 // 
-#endif
+#endif*/
 
 
 # include <stdio.h>		// REMOVE DEBUG ONLY // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -37,7 +38,8 @@ typedef struct s_fd_buffer {
 } buf_node;
 
 typedef struct s_fd_list {
-	buf_node *head;
+	buf_node			*head;
+	struct s_fd_list	*next;
 } fd_list;
 
 char			*get_next_line(int fd);

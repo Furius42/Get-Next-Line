@@ -6,12 +6,38 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:51:18 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/13 01:08:53 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/14 02:24:07 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./get_next_line.h"
 // should this be static ?  NORME SAYS YES :D
+
+fd_list	*fd_list_ops(fd_list *current, int fd, char option)
+{
+	fd_list	*node;
+
+	if (option == 'd') // delete current, return pointer to the current->next
+	{
+		node = current->next;
+		free (current);
+		return (node);
+	}
+	node = calloc(1, sizeof(fd_list));// fill with zeros
+	if (NULL == node)
+		return (NULL);
+	node->head->buf_len = BUFFER_SIZE;
+	node->head->fd = fd;
+	if (option == 'i')// INITIALIZE Head Node 
+		node->next = NULL;
+	else if (option == 'a')// APPEND Node / insert
+	{
+		node->next = current->next;
+		current->next = node;
+	}
+	return (node);
+}
+// UPDATE FOR LINKED LIST !! NOW IT IS WRITTEN FOR ARRAY.. 
 static buf_node	*get_node(fd_list *fd_buffers, int fd)
 {
 	printf("get node\n");
@@ -81,7 +107,7 @@ static char	*compose_line(buf_node *current)
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static		fd_list	fd_buffers[MAX_FDS];//	array of buf_node heads for each FD (set max as pleased)
+	static		fd_list	*fd_buffers;//[MAX_FDS];//	array of buf_node heads for each FD (set max as pleased)
 	buf_node	*node;
 
 	node = get_node(fd_buffers, fd);
