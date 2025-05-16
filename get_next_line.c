@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:51:18 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/14 02:24:07 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/16 23:48:55 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,11 @@ fd_list	*fd_list_ops(fd_list *current, int fd, char option)
 static buf_node	*get_node(fd_list *fd_buffers, int fd)
 {
 	printf("get node\n");
-	int			i;
 	buf_node	*current;
-	i = 0;
-	current = fd_buffers[i].head;
+	current = fd_buffers->head;
 	if (current = NULL)
 		return (node_ops(current, fd, 'i'));
-	while (current && i < MAX_FDS)
+	while (current)
 	{
 		if (current->fd == fd)
 			{
@@ -57,7 +55,7 @@ static buf_node	*get_node(fd_list *fd_buffers, int fd)
 				return(current);
 			}
 		else
-			current = fd_buffers[++i].head;
+			current = fd_buffers->head->next;
 	}
 	return (node_ops(current, fd, 'i'));
 }
