@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/11 17:00:07 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/17 00:34:40 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ size_t	linelen(const char *s, char term, size_t max_len)
 	size_t	len;
 
 	len = 0;
-	while (s[len] != term || len < max_len) // len <= max_len ??
+	while (s[len] != term && len < max_len) // len <= max_len ??
 		len++;
 	return (len);
 }
@@ -83,7 +83,10 @@ buf_node	*node_ops(buf_node *current, int fd, char option)
 	}
 	node = calloc(1, sizeof(buf_node));// fill with zeros
 	if (NULL == node)
+	{
+		free(node);
 		return (NULL);
+	}
 	node->buf_len = BUFFER_SIZE;
 	node->fd = fd;
 	if (option == 'i')// INITIALIZE Head Node 

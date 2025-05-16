@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:51:18 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/16 23:48:55 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/17 00:25:56 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,11 @@ fd_list	*fd_list_ops(fd_list *current, int fd, char option)
 	}
 	node = calloc(1, sizeof(fd_list));// fill with zeros
 	if (NULL == node)
+	{
+		free(node);
 		return (NULL);
-	node->head->buf_len = BUFFER_SIZE;
-	node->head->fd = fd;
+	}
+	node->head = node_ops(NULL, fd, 'i');
 	if (option == 'i')// INITIALIZE Head Node 
 		node->next = NULL;
 	else if (option == 'a')// APPEND Node / insert
@@ -43,7 +45,7 @@ static buf_node	*get_node(fd_list *fd_buffers, int fd)
 	printf("get node\n");
 	buf_node	*current;
 	current = fd_buffers->head;
-	if (current = NULL)
+	if ( NULL == current )
 		return (node_ops(current, fd, 'i'));
 	while (current)
 	{
@@ -108,6 +110,8 @@ char	*get_next_line(int fd)
 	static		fd_list	*fd_buffers;//[MAX_FDS];//	array of buf_node heads for each FD (set max as pleased)
 	buf_node	*node;
 
+	if (fd_buffers == NULL)
+		fd_buffers = fd_list_ops(NULL, fd, 'i');
 	node = get_node(fd_buffers, fd);
 	printf("step\n");
 	line = compose_line(node);
