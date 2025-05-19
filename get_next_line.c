@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:51:18 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/17 00:25:56 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/19 14:15:02 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,7 @@ fd_list	*fd_list_ops(fd_list *current, int fd, char option)
 	}
 	node = calloc(1, sizeof(fd_list));// fill with zeros
 	if (NULL == node)
-	{
-		free(node);
 		return (NULL);
-	}
 	node->head = node_ops(NULL, fd, 'i');
 	if (option == 'i')// INITIALIZE Head Node 
 		node->next = NULL;
@@ -96,14 +93,42 @@ static char	*compose_line(buf_node *current)
 	current = fd_head;
 	while (i * BS < len) 
 		{
-		ft_memcpy(line + BS * i, current->buf, (len % BS) + (BS - (len % BS)) * (len / BS > i));
+		ft_memmove(line + BS * i, current->buf, (len % BS) + (BS - (len % BS)) * (len / BS > i));
 		i++;
 		current = node_ops(current, current->fd, 'd');
 		}
-	ft_memcpy(fd_head->buf, fd_head->buf + (len % BS), current->buf_len); //	move the rest of buff to zero
+	ft_memmove(fd_head->buf, fd_head->buf + (len % BS), current->buf_len); //	move the rest of buff to zero
 	line[len] = '\0';
 	return (line);
 }
+
+
+/*
+
+Correct Flow (Reversed — Delete After)
+Here’s how you can do it safely:
+
+c
+Copy
+Edit
+current = fd_head;
+while (i * BS < len)
+{
+	int copy_len = (i == len / BS) ? len % BS : BS;
+	ft_memmove(line + BS * i, current->buf, copy_len);
+
+	if (i == len / BS) // Last buffer — move leftovers before deleting
+	{
+		ft_memmove(fd_head->buf, current->buf + (len % BS), current->buf_len);
+		fd_head->buf_len = current->buf_len;
+	}
+
+	current = node_ops(current, current->fd, 'd'); // Safe now
+	i++;
+}
+
+*/
+
 char	*get_next_line(int fd)
 {
 	char		*line;

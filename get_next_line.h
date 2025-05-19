@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:54:27 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/14 02:19:22 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/19 14:00:32 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ typedef struct s_fd_list {
 char			*get_next_line(int fd);
 
 void			*ft_memset(void *s, int c, size_t n);
-void			*ft_memcpy(void *dest, const void *src, size_t n);
+void			*ft_memmove(void *dest, const void *src, size_t n);
 void			*ft_calloc(size_t nmemb, size_t size);
 buf_node		*node_ops(buf_node *current, int fd, char option);
 size_t			linelen(const char *s, char term, size_t max_len);

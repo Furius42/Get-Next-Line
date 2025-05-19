@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/17 00:34:40 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/19 14:12:20 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,21 +41,34 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	ptr = malloc(total_size);
 	if (ptr == NULL)
 		return (NULL);
-	ft_memset(ptr, 0, total_size);
+	ft_memset(ptr, 0, total_size); // copy the function code here to save one function
 	return (ptr);
 }
 
-void	*ft_memcpy(void *dest, const void *src, size_t n)
+void	*ft_memmove(void *dest, const void *src, size_t n)
 {
-	size_t	i;
+	char	*temp_dest;
+	char	*temp_src;
 
-	if (NULL == dest || (NULL == src && n > 0))
+	if (dest == NULL && src == NULL && n > 0)
 		return (NULL);
-	i = 0;
-	while (i < n)
+	temp_dest = (char *)dest;
+	temp_src = (char *)src;
+	if (!dest && !src)
+		return (0);
+	if (dest <= src)
 	{
-		((unsigned char *)dest)[i] = ((const unsigned char *)src)[i];
-		i++;
+		while (n--)
+			*temp_dest++ = *temp_src++;
+	}
+	else if (dest > src)
+	{
+		temp_dest += n - 1;
+		temp_src += n - 1;
+		while (n--)
+		{
+			*temp_dest-- = *temp_src--;
+		}
 	}
 	return (dest);
 }
@@ -79,22 +92,23 @@ buf_node	*node_ops(buf_node *current, int fd, char option)
 	{
 		node = current->next;
 		free (current);
+		printf("node deleted\n");
 		return (node);
 	}
 	node = calloc(1, sizeof(buf_node));// fill with zeros
 	if (NULL == node)
-	{
-		free(node);
 		return (NULL);
-	}
-	node->buf_len = BUFFER_SIZE;
 	node->fd = fd;
 	if (option == 'i')// INITIALIZE Head Node 
+	{
 		node->next = NULL;
+		printf("node initialized\n");
+	}
 	else if (option == 'a')// APPEND Node / insert
 	{
 		node->next = current->next;
 		current->next = node;
+		printf("node added\n");
 	}
 	return (node);
 }
