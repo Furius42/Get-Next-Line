@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/20 18:57:57 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/21 00:28:17 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,20 @@ void	*ft_calloc(size_t nmemb, size_t size)
 		return (NULL);
 	ft_memset(ptr, 0, total_size); // copy the function code here to save one function
 	return (ptr);
+}
+void	*ft_memcpy(void *dest, const void *src, size_t n)
+{
+	size_t	i;
+
+	if (dest == NULL && src == NULL && n > 0)
+		return (NULL);
+	i = 0;
+	while (i < n)
+	{
+		((unsigned char *)dest)[i] = ((const unsigned char *)src)[i];
+		i++;
+	}
+	return (dest);
 }
 
 void	*ft_memmove(void *dest, const void *src, size_t n)
@@ -200,10 +214,11 @@ static char	*compose_line(buf_node *current)
 	if(!(line = malloc(len * sizeof(char) + 1)))
 		return (NULL);
 	current = fd_head;
+	printf("current = %p\n", current);
 	while (i * BS < len) 
 		{
 		copy_len = (len % BS) + (BS - (len % BS)) * (len / BS > i);
-		ft_memmove(line + BS * i, current->buf, copy_len);
+		ft_memcpy(line + BS * i, current->buf, copy_len);
 		if(i == len / BS)
 		{
 			ft_memmove(fd_head->buf, current->buf + (len % BS), current->buf_len);
@@ -258,12 +273,12 @@ int	main(int argc, char *argv[])
 	int i = 0;
 	while((line = get_next_line(fd)))
 	{
-		printf("This is line %i:\n\n%s\n", i++, line);
+		printf("This is line %i:\n%s\n", i++, line);
 		free(line);
 		if(i == 30)
 			return(0);
 	}
 	close(fd);
-	printf("==FINISHED==");
+	printf("==FINISHED==\n");
 	return (0);
 }
