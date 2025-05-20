@@ -6,14 +6,13 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:51:18 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/19 14:15:02 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/20 18:20:03 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./get_next_line.h"
-// should this be static ?  NORME SAYS YES :D
 
-fd_list	*fd_list_ops(fd_list *current, int fd, char option)
+static fd_list	*fd_list_ops(fd_list *current, int fd, char option)
 {
 	fd_list	*node;
 
@@ -67,13 +66,14 @@ static char	*compose_line(buf_node *current)
 	int			len;
 	int			i;
 	int			BS;
-
+	int			copy_len;
 	buf_node 	*fd_head;
 
 	BS = BUFFER_SIZE;
 	len = 0;
 	i = 0;
 	fd_head = current;
+	copy_len = 0;
 	// load buffer(s)
 	while ((bytes_read = read(current->fd, current->buf + current->buf_len, BS - current->buf_len)) > 0)
 	{
@@ -93,11 +93,16 @@ static char	*compose_line(buf_node *current)
 	current = fd_head;
 	while (i * BS < len) 
 		{
-		ft_memmove(line + BS * i, current->buf, (len % BS) + (BS - (len % BS)) * (len / BS > i));
-		i++;
-		current = node_ops(current, current->fd, 'd');
+		copy_len = (len % BS) + (BS - (len % BS)) * (len / BS > i);
+		ft_memmove(line + BS * i, current->buf, copy_len);
+		if(i == len / BS)
+		{
+			ft_memmove(fd_head->buf, current->buf + (len % BS), current->buf_len);
+			fd_head->buf_len = current->buf_len;
 		}
-	ft_memmove(fd_head->buf, fd_head->buf + (len % BS), current->buf_len); //	move the rest of buff to zero
+		current = node_ops(current, current->fd, 'd');
+		i++;
+		}
 	line[len] = '\0';
 	return (line);
 }

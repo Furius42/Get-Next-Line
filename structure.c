@@ -5,101 +5,265 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/02 00:03:29 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/11 16:25:17 by vhoracek         ###   ########.fr       */
+/*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
+/*   Updated: 2025/05/20 18:57:57 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
-// structure //
 
-ssize_t	bytes_read;
+#include <fcntl.h>
+#include <stdio.h>
+#include <errno.h>
+#include <string.h>
+#include "./get_next_line.h"
 
-Function receives FD
-	->	Check if FD is valid
-	look up if FD is in list 
-		not in list	->	list_newline -> New FD * Start of file = NEXTLINE_START // go to next line -v
-		is in list	->	take last NEXTLINE_START
-
-Call FILL BUFFER
-scan for '\n' or EOF (NULL) //function from libft.. . ?
-	if not found, REPEAT(Call FILL BUFFER)
-
-while(node.next[i++])
-	if(node.next[i] != '\n')
-		fill_buffer();
-
-while(node.next[i] != '\n' || NULL != node.next[i])
-	i++;
-
-
-
-int	fill_buffer(int fd);
-	while(node.next){
-		bytes_read = read(fd, node_current->buffer, BUFFER_SIZE); // how to tell read from which character it should start reading???????? how to pass char *line_start??
-		if (bytes_read <= 0) // no error handling. EOF = 0, ERROR = -1
-			return (NULL);
-	}
-char	*parse_buffer(char* line, int line_len)
-
-
-line = malloc(sizeof(char) * fill_buffer(fd_list.fd, fd_list.start));
-
-return(parse_buffer(line, last_line_len));
-
-
-
-
-typedef struct s_fd_buffer {
-    int fd;
-    char buffer[BUFFER_SIZE + 1];  // +1 for null-termination safety
-    ssize_t buf_len;
-    ssize_t buf_pos;
-    struct s_fd_buffer *next;
-} buf_node;
-
-buf_node fd_list;
-
-fd_list = NULL;
-
-int fd = 0;
-current = add_node(fd);
-
-main -> get_next_line(fd)
-
-get_next_line(fd)
-	fd <= 0 ? return(NULL) : return(compose_line(get_node(fd)));
-
-buf_node	*get_node(int fd)
+void	*ft_memset(void *s, int c, size_t n)
 {
-	while (fd != current->fd)
-		current = current.next;
-	if (current->next == NULL)
-		current->next = add_node(fd)
+	size_t	i;
+
+	i = 0;
+	while (i < n)
+	{
+		((unsigned char *)s)[i] = c;
+		i++;
+	}
+	return (s);
 }
 
-// ! !! KEEP track of available space in buf for next read (buf_free)
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*ptr;
+	size_t	total_size;
 
-/* 
-while (bytes_read < BS) // read till EOF .. if read returns a value smaller than buffer size, it means there is EOF within the buffer.
+	if (nmemb == 0 || size == 0)
 	{
-		len = linelen(current->buf, '\n', bytes_read);
-		if (len < BS)
-			if (line = malloc(sizeof(char) * len + 1))
+		ptr = malloc(0);
+		return (ptr);
 	}
- */
-/* read from fd till \0 or BS.if \0 not found, make new node, repeat(batch++). once \0 found, alloc line(depending on number of itterations + read return val (bytes_read )) and return
+	if (size != 0 && nmemb > (size_t)-1 / size)
+		return (NULL);
+	total_size = nmemb * size;
+	ptr = malloc(total_size);
+	if (ptr == NULL)
+		return (NULL);
+	ft_memset(ptr, 0, total_size); // copy the function code here to save one function
+	return (ptr);
+}
+
+void	*ft_memmove(void *dest, const void *src, size_t n)
+{
+	char	*temp_dest;
+	char	*temp_src;
+
+	if (dest == NULL && src == NULL && n > 0)
+		return (NULL);
+	temp_dest = (char *)dest;
+	temp_src = (char *)src;
+	if (!dest && !src)
+		return (0);
+	if (dest <= src)
+	{
+		while (n--)
+			*temp_dest++ = *temp_src++;
+	}
+	else if (dest > src)
+	{
+		temp_dest += n - 1;
+		temp_src += n - 1;
+		while (n--)
+		{
+			*temp_dest-- = *temp_src--;
+		}
+	}
+	return (dest);
+}
+// call with char term = 10 for '\n' || is limited by max_len. Keeping current buffer length as maximum
+size_t	linelen(const char *s, char term, size_t max_len)
+{
+	size_t	len;
+
+	len = 0;
+	while (s[len] != term && len < max_len) // len <= max_len ??
+		len++;
+	return (len);
+}
+
+
+buf_node	*node_ops(buf_node *current, int fd, char option)
+{
+	buf_node	*node;
+
+	if (option == 'd') // delete current, return pointer to the current->next
+	{
+		node = current->next;
+		free (current);
+		printf("node deleted\n");
+		return (node);
+	}
+	node = calloc(1, sizeof(buf_node));// fill with zeros
+	if (NULL == node)
+		return (NULL);
+	node->fd = fd;
+	if (option == 'i')// INITIALIZE Head Node 
+	{
+		node->next = NULL;
+		printf("node initialized\n");
+	}
+	else if (option == 'a')// APPEND Node / insert
+	{
+		node->next = current->next;
+		current->next = node;
+		printf("node added\n");
+	}
+	return (node);
+}
+
+
+static fd_list	*fd_list_ops(fd_list *current, int fd, char option)
+{
+	fd_list	*node;
+
+	if (option == 'd') // delete current, return pointer to the current->next
+	{
+		node = current->next;
+		free (current);
+		return (node);
+	}
+	node = calloc(1, sizeof(fd_list));// fill with zeros
+	if (NULL == node)
+		return (NULL);
+	node->head = node_ops(NULL, fd, 'i');
+	if (option == 'i')// INITIALIZE Head Node 
+		node->next = NULL;
+	else if (option == 'a')// APPEND Node / insert
+	{
+		node->next = current->next;
+		current->next = node;
+	}
+	return (node);
+}
+// UPDATE FOR LINKED LIST !! NOW IT IS WRITTEN FOR ARRAY.. 
+static buf_node	*get_node(fd_list *fd_buffers, int fd)
+{
+	printf("get node\n");
+	buf_node	*current;
+	current = fd_buffers->head;
+	if ( NULL == current )
+		return (node_ops(current, fd, 'i'));
 	while (current)
 	{
-		read(fd,current->buf, BS - 1);
-		// len = ft_strlen(current->buf)  ... . or ... if buffer fully loaded just add counter to batch, else use bytes_read
-		line = parse(current->buf, line, len);
-		
-		current = current->next;
-		++batch;
+		if (current->fd == fd)
+			{
+/* 			if (current->buf == 0)
+				return(node_ops(current, fd, 'd'));
+			else */
+				return(current);
+			}
+		else
+			current = fd_buffers->head->next;
 	}
+	return (node_ops(current, fd, 'i'));
+}
+// should this be static ?  NORME SAYS YES :D
+static char	*compose_line(buf_node *current)
+{
+	printf("compose line\n");
+	char		*line;
+	int			bytes_read;
+	int			len;
+	int			i;
+	int			BS;
+	int			copy_len;
+	buf_node 	*fd_head;
+	BS = BUFFER_SIZE;
+	len = 0;
+	i = 0;
+	fd_head = current;
+	copy_len = 0;
+	// load buffer(s)
+	while ((bytes_read = read(current->fd, current->buf + current->buf_len, BS - current->buf_len)) > 0)
+	{
+		current->buf_len += bytes_read;
+		len += linelen(current->buf, '\n', current->buf_len); // line length limited by EOF(calculated) or determined by '\n' character
 
-	if (!(line = malloc(BS * batch + len + 1)))
-		return (0);
-	//iterate linked list and parse buffer batches-- 
-*/
+		if (len % BS == 0)// IF Buffer loaded in full since no \n nor EOF found in this batch
+			current = node_ops(current, current->fd, 'a');//append node, set it to current if buffer fully loaded, no EOF nor \n found
+		else//Found \n or EOF in this node->buf
+			break;
+	}
+	if ((current->buf_len == 0 && bytes_read == 0) || bytes_read < 0 )// Check: read FAIL or EOF
+		{
+			node_ops(current, current->fd, 'd');
+			return (NULL); // delete node head on EOF or FAIL
+		}
+		current->buf_len = bytes_read - len % BS; // Set the size of future head's buffer to accomodate characters remaining after line extraction.
+	if(!(line = malloc(len * sizeof(char) + 1)))
+		return (NULL);
+	current = fd_head;
+	while (i * BS < len) 
+		{
+		copy_len = (len % BS) + (BS - (len % BS)) * (len / BS > i);
+		ft_memmove(line + BS * i, current->buf, copy_len);
+		if(i == len / BS)
+		{
+			ft_memmove(fd_head->buf, current->buf + (len % BS), current->buf_len);
+			fd_head->buf_len = current->buf_len;
+		}
+		current = node_ops(current, current->fd, 'd');
+		i++;
+		}
+	line[len] = '\0';
+	return (line);
+}
+
+char	*get_next_line(int fd)
+{
+	char		*line;
+	static		fd_list	*fd_buffers;//[MAX_FDS];//	array of buf_node heads for each FD (set max as pleased)
+	buf_node	*node;
+
+	if (fd_buffers == NULL)
+		fd_buffers = fd_list_ops(NULL, fd, 'i');
+	node = get_node(fd_buffers, fd);
+	printf("step\n");
+	line = compose_line(node);
+	return (line); // PASS HEAD TO COMPOSE_LINE TO BE ABLE TO ITERATE // return (compose_line(get_node(fd_buffers, fd)));
+}
+
+int	main(int argc, char *argv[])
+{
+	char	*input;
+	char	*line;
+	int		fd;
+	
+	if (argc != 2)
+		return(printf("Give 1 argument: File name to get next line from or '0' for STDIN. Else lorem will be used.\n\n"));
+	input = argv[1];
+	if (*input == '0')
+		fd = 0;
+	else 
+	{
+	fd = open(input, O_RDONLY);
+	if (fd == -1)
+		{
+		fprintf(stderr, "Opening %s failed. Reason: %s\n", input, strerror(errno));
+		fd = open("lorem.txt", O_RDONLY);
+			if (fd == -1)
+			{
+				perror("Opening lorem.txt failed. Falling back to STDIN (fd 0). Reason");
+				fd = 0;
+			}
+		}
+	}
+	int i = 0;
+	while((line = get_next_line(fd)))
+	{
+		printf("This is line %i:\n\n%s\n", i++, line);
+		free(line);
+		if(i == 30)
+			return(0);
+	}
+	close(fd);
+	printf("==FINISHED==");
+	return (0);
+}

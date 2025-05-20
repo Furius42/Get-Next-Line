@@ -1,3 +1,68 @@
+static char	*compose_line(buf_node *head)
+{
+	int			bytes_read;
+	int			line_len = 0;
+	int			BS = BUFFER_SIZE;
+	buf_node	*curr = head;
+
+	// Step 1: Load buffer(s) until newline or EOF
+	while ((bytes_read = read(curr->fd, curr->buf + curr->buf_len, BS - curr->buf_len)) > 0)
+	{
+		curr->buf_len += bytes_read;
+		line_len += linelen(curr->buf, '\n', curr->buf_len);
+
+		if (line_len < curr->buf_len) // found newline within this buffer
+			break;
+		else if (curr->buf_len == BS) // buffer full and no newline: need new node
+		{
+			curr = node_ops(curr, curr->fd, 'a');
+			if (!curr)
+				return NULL; // failed to allocate
+		}
+		else
+			break; // short read, EOF?
+	}
+
+	if ((curr->buf_len == 0 && bytes_read == 0) || bytes_read < 0)
+	{
+		node_ops(head, head->fd, 'd');
+		return NULL; // EOF or read error
+	}
+
+	// Step 2: Allocate line
+	char *line = malloc(line_len + 1);
+	if (!line)
+		return NULL;
+
+	// Step 3: Copy buffers to line
+	int copied = 0;
+	curr = head;
+	while (copied < line_len && curr)
+	{
+		int to_copy = (line_len - copied > curr->buf_len) ? curr->buf_len : line_len - copied;
+		ft_memcpy(line + copied, curr->buf, to_copy);
+		copied += to_copy;
+
+		if (copied < line_len)
+			curr = node_ops(curr, curr->fd, 'd'); // free used node
+		else
+			break;
+	}
+
+	// Step 4: Shift leftover buffer
+	int offset = linelen(curr->buf, '\n', curr->buf_len) + 1; // include '\n'
+	int leftover = curr->buf_len - offset;
+	if (leftover > 0)
+		ft_memcpy(curr->buf, curr->buf + offset, leftover);
+	curr->buf_len = leftover;
+
+	line[line_len] = '\0';
+	return line;
+}
+
+
+
+
 Ah, I see! You need to avoid using `realloc()` and instead use `malloc()` for memory allocation, and you're thinking of using a **linked list** to store the buffers. Additionally, you need to manage multiple file descriptors, so a static structure will be necessary to track each file descriptor’s state.
 
 ### Let's break down the solution:
