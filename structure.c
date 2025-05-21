@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/21 00:28:17 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/21 14:39:45 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,8 @@ buf_node	*node_ops(buf_node *current, int fd, char option)
 	if (option == 'd') // delete current, return pointer to the current->next
 	{
 		node = current->next;
+		printf("node at %p deleted\n", current);
 		free (current);
-		printf("node deleted\n");
 		return (node);
 	}
 	node = calloc(1, sizeof(buf_node));// fill with zeros
@@ -121,13 +121,13 @@ buf_node	*node_ops(buf_node *current, int fd, char option)
 	if (option == 'i')// INITIALIZE Head Node 
 	{
 		node->next = NULL;
-		printf("node initialized\n");
+		printf("node initialized at %p\n", node);
 	}
 	else if (option == 'a')// APPEND Node / insert
 	{
 		node->next = current->next;
 		current->next = node;
-		printf("node added\n");
+		printf("node added at %p\n", node);
 	}
 	return (node);
 }
@@ -179,7 +179,7 @@ static buf_node	*get_node(fd_list *fd_buffers, int fd)
 	return (node_ops(current, fd, 'i'));
 }
 // should this be static ?  NORME SAYS YES :D
-static char	*compose_line(buf_node *current)
+char	*compose_line(buf_node *current)
 {
 	printf("compose line\n");
 	char		*line;
@@ -197,9 +197,9 @@ static char	*compose_line(buf_node *current)
 	// load buffer(s)
 	while ((bytes_read = read(current->fd, current->buf + current->buf_len, BS - current->buf_len)) > 0)
 	{
+		printf("Read of: %i/%li from FD%i to %p\n", bytes_read, (BS - current->buf_len), current->fd, current->buf + current->buf_len);
 		current->buf_len += bytes_read;
 		len += linelen(current->buf, '\n', current->buf_len); // line length limited by EOF(calculated) or determined by '\n' character
-
 		if (len % BS == 0)// IF Buffer loaded in full since no \n nor EOF found in this batch
 			current = node_ops(current, current->fd, 'a');//append node, set it to current if buffer fully loaded, no EOF nor \n found
 		else//Found \n or EOF in this node->buf
@@ -208,27 +208,31 @@ static char	*compose_line(buf_node *current)
 	if ((current->buf_len == 0 && bytes_read == 0) || bytes_read < 0 )// Check: read FAIL or EOF
 		{
 			node_ops(current, current->fd, 'd');
+			printf("FAIL OR EOF");
 			return (NULL); // delete node head on EOF or FAIL
 		}
 		current->buf_len = bytes_read - len % BS; // Set the size of future head's buffer to accomodate characters remaining after line extraction.
 	if(!(line = malloc(len * sizeof(char) + 1)))
 		return (NULL);
 	current = fd_head;
-	printf("current = %p\n", current);
+	printf("Current = %p len = %i\n", current, len);
 	while (i * BS < len) 
 		{
 		copy_len = (len % BS) + (BS - (len % BS)) * (len / BS > i);
 		ft_memcpy(line + BS * i, current->buf, copy_len);
-		if(i == len / BS)
+		if(i == len / BS) //last node in chain if line longer than BUFFER_SIZE
 		{
-			ft_memmove(fd_head->buf, current->buf + (len % BS), current->buf_len);
-			fd_head->buf_len = current->buf_len;
+			ft_memcpy(current->buf, current->buf + (len % BS), current->buf_len);
+			printf("Copying %li chars to current.buf: %p from current.buf+(len%%BS): %p \n", current->buf_len, current->buf, current->buf + (len % BS));
+			printf("Current.buf:\"%s\" Current.buf.len:%li\n", current->buf, current->buf_len);
+			fd_head = current;//fd_head->buf_len = current->buf_len;
+			line[len] = '\0';
+			return (line);
+			printf("Line:\"%s\"\n", line);
 		}
 		current = node_ops(current, current->fd, 'd');
 		i++;
 		}
-	line[len] = '\0';
-	return (line);
 }
 
 char	*get_next_line(int fd)
@@ -282,3 +286,5 @@ int	main(int argc, char *argv[])
 	printf("==FINISHED==\n");
 	return (0);
 }
+
+// copy the \n character !! !!

@@ -1,8 +1,13 @@
-dac da 
-new 
-tex1337
-42
+ShortLN
+Add some more text to get over 10 chars budder buffer khaamo innit!
+helll yeah this is another line here!
+new '\n'
+tex133\n7 '\0'
+fewEmpty:
 
 
+
+
+hey
 
 EOF
