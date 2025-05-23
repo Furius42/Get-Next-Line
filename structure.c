@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/23 14:49:58 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/23 18:49:45 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,7 @@ char	*compose_line(buf_node *current)
 		printf("Read of: %i/%li from FD%i to %p\n", bytes_read, (BS - current->buf_len), current->fd, current->buf + current->buf_len);
 		current->buf_len += bytes_read;
 		len += linelen(current->buf, '\n', current->buf_len); // line length limited by EOF(calculated) or determined by '\n' character
-		if (len % BS == 0)// IF Buffer loaded in full since no \n nor EOF found in this batch
+		if (len % BS == 0)// IF Buffer loaded in full since no \n nor EOF found in this batch//////////DANGEROUS FIND OTHER SOLUTION !!!!!!!!!!!!!!!!!!!!!!!!!
 			current = node_ops(current, current->fd, 'a');//append node, set it to current if buffer fully loaded, no EOF nor \n found
 		else//Found \n or EOF in this node->buf
 			break;
@@ -211,7 +211,7 @@ char	*compose_line(buf_node *current)
 			printf("FAIL OR EOF");
 			return (NULL); // delete node head on EOF or FAIL
 		}
-	current->buf_len = bytes_read - len % BS; // Set the size of future head's buffer to accomodate characters remaining after line extraction.
+	current->buf_len -= len % BS; //current->buf_len = bytes_read - len % BS;  Set the size of future head's buffer to accomodate characters remaining after line extraction.
 	
 	if(!(line = malloc(len * sizeof(char) + 1)))
 		return (NULL);

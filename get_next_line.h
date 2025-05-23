@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:54:27 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/20 23:55:57 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/23 18:23:52 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 1024
+# define BUFFER_SIZE 10
 #endif
 
 /*
