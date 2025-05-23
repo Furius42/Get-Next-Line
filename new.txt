@@ -1,6 +1,12 @@
 ShortLN
-Add some more text to get over 10 chars budder buffer khaamo innit!
-helll yeah this is another line here!
+Add some more text to get over fifteen chars budder buffer khaamo innit!
+helll yeah this is another line... here!
+space:
+ 
+tab:
+	
+empty:
+
 new '\n'
 tex133\n7 '\0'
 fewEmpty:

@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 14:52:57 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/20 18:32:41 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/23 11:24:29 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	main(int argc, char *argv[])
 	int i = 0;
 	while((line = get_next_line(fd)))
 	{
-		printf("This is line %i:\n\n%s", i++, line);
+		printf("This is line %i:\n\n\033[32;1m%s\033[0m|", i++, line);
 		free(line);
 		if(i == 30)
 			return(0);

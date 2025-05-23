@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/21 14:39:45 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/23 14:49:58 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,9 +97,9 @@ size_t	linelen(const char *s, char term, size_t max_len)
 	size_t	len;
 
 	len = 0;
-	while (s[len] != term && len < max_len) // len <= max_len ??
+	while (s[len] != term && len < (max_len - 1)) // len <= max_len ??
 		len++;
-	return (len);
+	return (++len);
 }
 
 
@@ -211,7 +211,8 @@ char	*compose_line(buf_node *current)
 			printf("FAIL OR EOF");
 			return (NULL); // delete node head on EOF or FAIL
 		}
-		current->buf_len = bytes_read - len % BS; // Set the size of future head's buffer to accomodate characters remaining after line extraction.
+	current->buf_len = bytes_read - len % BS; // Set the size of future head's buffer to accomodate characters remaining after line extraction.
+	
 	if(!(line = malloc(len * sizeof(char) + 1)))
 		return (NULL);
 	current = fd_head;
@@ -222,15 +223,19 @@ char	*compose_line(buf_node *current)
 		ft_memcpy(line + BS * i, current->buf, copy_len);
 		if(i == len / BS) //last node in chain if line longer than BUFFER_SIZE
 		{
+			printf("Copy %li chars to current.buf: %p from current.buf+(len%%BS): %p \n", current->buf_len, current->buf, current->buf + (len % BS));
 			ft_memcpy(current->buf, current->buf + (len % BS), current->buf_len);
-			printf("Copying %li chars to current.buf: %p from current.buf+(len%%BS): %p \n", current->buf_len, current->buf, current->buf + (len % BS));
-			printf("Current.buf:\"%s\" Current.buf.len:%li\n", current->buf, current->buf_len);
-			fd_head = current;//fd_head->buf_len = current->buf_len;
+			printf("Current.buf:\n%s^-- Leftover.buf len:%li\n", current->buf, current->buf_len);
+			if(current != fd_head)
+				ft_memcpy(fd_head, current, sizeof(buf_node));
 			line[len] = '\0';
 			return (line);
-			printf("Line:\"%s\"\n", line);
 		}
-		current = node_ops(current, current->fd, 'd');
+		//(current == fd_head && (current = current->next)) || (current = node_ops(current, current->fd, 'd'));
+		if(current != fd_head)
+			current = node_ops(current, current->fd, 'd');
+		else
+			current = current->next;
 		i++;
 		}
 }
@@ -274,10 +279,10 @@ int	main(int argc, char *argv[])
 			}
 		}
 	}
-	int i = 0;
+	int i = 1;
 	while((line = get_next_line(fd)))
 	{
-		printf("This is line %i:\n%s\n", i++, line);
+		printf("\033[32;1mThis is line %i:\033[0m\n\033[30;1m%s\033[0m|\n", i++, line);
 		free(line);
 		if(i == 30)
 			return(0);
