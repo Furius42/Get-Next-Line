@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/24 23:49:30 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/25 00:02:07 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,11 +241,12 @@ char	*compose_line(buf_node *current)
 }
 
 
+// fuck it and start over again/////////////////////////////////////////////////////
 
-
-
-buf_node	*clean_up_nodes(buf_node *current)
+buf_node	*clean_up_nodes(buf_node *current) // free and return NULL ?? why do i need it ? I dont
 {
+while(current->next)
+	current = node_ops(current, current->fd, 'd');
 return(current);
 }
 char	*parse_line(buf_node *current)//?what should it return? THE LINE! ! 
@@ -255,8 +256,14 @@ char	*parse_line(buf_node *current)//?what should it return? THE LINE! !
 
 char	*compose_line(buf_node *current)
 {
+	ssize_t	bytes_read;
+
 	printf("compose line\n");
 //	Read Into Buffer
+while(bytes_read = read(current->fd, current->buf + current->buf_len, BUFFER_SIZE - current->buf_len ))
+{
+	linelen(current->buf, '\n', BUFFER_SIZE)
+}
 //	Scan for \n or EOF -ADD NODE, Reapeat till found. KEEP TRACK OF NODES ? 
 
 
