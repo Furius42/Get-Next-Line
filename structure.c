@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/23 18:49:45 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/24 23:49:30 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,6 +239,42 @@ char	*compose_line(buf_node *current)
 		i++;
 		}
 }
+
+
+
+
+
+buf_node	*clean_up_nodes(buf_node *current)
+{
+return(current);
+}
+char	*parse_line(buf_node *current)//?what should it return? THE LINE! ! 
+{
+
+}
+
+char	*compose_line(buf_node *current)
+{
+	printf("compose line\n");
+//	Read Into Buffer
+//	Scan for \n or EOF -ADD NODE, Reapeat till found. KEEP TRACK OF NODES ? 
+
+
+//	Calculate Line Length, allocate and copy from buffers
+parse_line(current);
+
+//	Copy Remainder of buffer to the beginning of Head node, set buffer size
+
+//	Clean up extra nodes if there are any
+clean_up_nodes(current);
+
+//	Return Line
+}
+
+
+
+
+
 
 char	*get_next_line(int fd)
 {
