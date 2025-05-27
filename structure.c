@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/25 00:02:07 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/28 01:21:05 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,14 +91,16 @@ void	*ft_memmove(void *dest, const void *src, size_t n)
 	}
 	return (dest);
 }
-// call with char term = 10 for '\n' || is limited by max_len. Keeping current buffer length as maximum
+// Returns length including character specified in char term. If not found returns 0
 size_t	linelen(const char *s, char term, size_t max_len)
 {
 	size_t	len;
 
 	len = 0;
-	while (s[len] != term && len < (max_len - 1)) // len <= max_len ??
+	while (s[len] != term && len < max_len)
 		len++;
+	if (len == max_len)
+		return (0); /// ale kurva i kdyz bude EOF !!! vraci NULU
 	return (++len);
 }
 
@@ -191,7 +193,6 @@ char	*compose_line(buf_node *current)
 	buf_node 	*fd_head;
 	BS = BUFFER_SIZE;
 	len = 0;
-	i = 0;
 	fd_head = current;
 	copy_len = 0;
 	// load buffer(s)
@@ -199,11 +200,18 @@ char	*compose_line(buf_node *current)
 	{
 		printf("Read of: %i/%li from FD%i to %p\n", bytes_read, (BS - current->buf_len), current->fd, current->buf + current->buf_len);
 		current->buf_len += bytes_read;
-		len += linelen(current->buf, '\n', current->buf_len); // line length limited by EOF(calculated) or determined by '\n' character
-		if (len % BS == 0)// IF Buffer loaded in full since no \n nor EOF found in this batch//////////DANGEROUS FIND OTHER SOLUTION !!!!!!!!!!!!!!!!!!!!!!!!!
-			current = node_ops(current, current->fd, 'a');//append node, set it to current if buffer fully loaded, no EOF nor \n found
-		else//Found \n or EOF in this node->buf
+		i = linelen(current->buf, '\n', current->buf_len); // line length limited by EOF(calculated) or determined by '\n' character
+		if (i == 0)// Buffer loaded in full no \n found
+			{
+			len += current->buf_len;
+			if(current->buf_len == BS)
+				current = node_ops(current, current->fd, 'a');//append node, set it to current if buffer fully loaded, no EOF nor \n found
+			}
+		else// Found \n
+			{
+			len += i;
 			break;
+			}
 	}
 	if ((current->buf_len == 0 && bytes_read == 0) || bytes_read < 0 )// Check: read FAIL or EOF
 		{
@@ -241,8 +249,8 @@ char	*compose_line(buf_node *current)
 }
 
 
-// fuck it and start over again/////////////////////////////////////////////////////
-
+// fuck it and start over again//////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
 buf_node	*clean_up_nodes(buf_node *current) // free and return NULL ?? why do i need it ? I dont
 {
 while(current->next)
@@ -254,21 +262,27 @@ char	*parse_line(buf_node *current)//?what should it return? THE LINE! !
 
 }
 
-char	*compose_line(buf_node *current)
+char	*compose_line(buf_node *current)// ////////////////////////////// NEW COMPOSE LINE //////////////
 {
 	ssize_t	bytes_read;
-
+	size_t	len;
+	char	*line;
 	printf("compose line\n");
 //	Read Into Buffer
-while(bytes_read = read(current->fd, current->buf + current->buf_len, BUFFER_SIZE - current->buf_len ))
+while(1)
 {
-	linelen(current->buf, '\n', BUFFER_SIZE)
+	while (current)
+	{
+	bytes_read = read(current->fd, current->buf + current->buf_len, BUFFER_SIZE - current->buf_len);
+	len += linelen(current->buf, '\n', BUFFER_SIZE);
+	current = current->next;
+	}
 }
 //	Scan for \n or EOF -ADD NODE, Reapeat till found. KEEP TRACK OF NODES ? 
 
 
-//	Calculate Line Length, allocate and copy from buffers
-parse_line(current);
+//	Calculate Line Length, allocate and copy from buffer(s)
+line = parse_line(current);
 
 //	Copy Remainder of buffer to the beginning of Head node, set buffer size
 
@@ -278,7 +292,7 @@ clean_up_nodes(current);
 //	Return Line
 }
 
-
+*/
 
 
 
