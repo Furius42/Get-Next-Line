@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/28 01:21:05 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/05/28 18:11:48 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,6 +213,7 @@ char	*compose_line(buf_node *current)
 			break;
 			}
 	}
+	i = 0;
 	if ((current->buf_len == 0 && bytes_read == 0) || bytes_read < 0 )// Check: read FAIL or EOF
 		{
 			node_ops(current, current->fd, 'd');
