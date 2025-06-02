@@ -1,6 +1,6 @@
 ShortLN
 Add some more text to get over fifteen chars budder buffer khaamo innit!
-helll yeah this is another line... here!
+helll yeah this is another line.. here!
 space:
  
 tab:

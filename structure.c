@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/28 18:11:48 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/06/02 23:54:43 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,7 +220,7 @@ char	*compose_line(buf_node *current)
 			printf("FAIL OR EOF");
 			return (NULL); // delete node head on EOF or FAIL
 		}
-	current->buf_len -= len % BS; //current->buf_len = bytes_read - len % BS;  Set the size of future head's buffer to accomodate characters remaining after line extraction.
+	current->buf_len -= len % BS  (0 == (len % BS)); //current->buf_len = bytes_read - len % BS;  Set the size of future head's buffer to accomodate characters remaining after line extraction.
 	
 	if(!(line = malloc(len * sizeof(char) + 1)))
 		return (NULL);
