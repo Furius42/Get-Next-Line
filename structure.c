@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/06/02 23:54:43 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/06/03 01:12:39 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,7 +220,7 @@ char	*compose_line(buf_node *current)
 			printf("FAIL OR EOF");
 			return (NULL); // delete node head on EOF or FAIL
 		}
-	current->buf_len -= len % BS  (0 == (len % BS)); //current->buf_len = bytes_read - len % BS;  Set the size of future head's buffer to accomodate characters remaining after line extraction.
+	current->buf_len -= (BS * !(len % BS) + (len % BS)); //current->buf_len = bytes_read - len % BS;  Set the size of future head's buffer to accomodate characters remaining after line extraction.
 	
 	if(!(line = malloc(len * sizeof(char) + 1)))
 		return (NULL);
@@ -230,7 +230,7 @@ char	*compose_line(buf_node *current)
 		{
 		copy_len = (len % BS) + (BS - (len % BS)) * (len / BS > i);
 		ft_memcpy(line + BS * i, current->buf, copy_len);
-		if(i == len / BS) //last node in chain if line longer than BUFFER_SIZE
+		if(!(current->next)) //last node in chain if line longer than BUFFER_SIZE
 		{
 			printf("Copy %li chars to current.buf: %p from current.buf+(len%%BS): %p \n", current->buf_len, current->buf, current->buf + (len % BS));
 			ft_memcpy(current->buf, current->buf + (len % BS), current->buf_len);
