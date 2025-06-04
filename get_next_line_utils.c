@@ -6,30 +6,19 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/19 14:12:20 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/06/04 16:17:05 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./get_next_line.h"
 
-void	*ft_memset(void *s, int c, size_t n)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < n)
-	{
-		((unsigned char *)s)[i] = c;
-		i++;
-	}
-	return (s);
-}
-
 void	*ft_calloc(size_t nmemb, size_t size)
 {
 	void	*ptr;
 	size_t	total_size;
-
+	size_t	i;
+	
+	i = 0;
 	if (nmemb == 0 || size == 0)
 	{
 		ptr = malloc(0);
@@ -41,49 +30,43 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	ptr = malloc(total_size);
 	if (ptr == NULL)
 		return (NULL);
-	ft_memset(ptr, 0, total_size); // copy the function code here to save one function
+	while (i < total_size)
+	{
+		((unsigned char *)ptr)[i] = 0;
+		i++;
+	}
 	return (ptr);
 }
 
-void	*ft_memmove(void *dest, const void *src, size_t n)
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	char	*temp_dest;
-	char	*temp_src;
+	size_t	i;
 
 	if (dest == NULL && src == NULL && n > 0)
 		return (NULL);
-	temp_dest = (char *)dest;
-	temp_src = (char *)src;
-	if (!dest && !src)
-		return (0);
-	if (dest <= src)
+	i = 0;
+	while (i < n)
 	{
-		while (n--)
-			*temp_dest++ = *temp_src++;
-	}
-	else if (dest > src)
-	{
-		temp_dest += n - 1;
-		temp_src += n - 1;
-		while (n--)
-		{
-			*temp_dest-- = *temp_src--;
-		}
+		((unsigned char *)dest)[i] = ((const unsigned char *)src)[i];
+		i++;
 	}
 	return (dest);
 }
-// call with char term = 10 for '\n' || is limited by max_len. Keeping current buffer length as maximum
+
+// Returns length including character specified in char term. If not found returns 0
 size_t	linelen(const char *s, char term, size_t max_len)
 {
 	size_t	len;
 
 	len = 0;
-	while (s[len] != term && len < max_len) // len <= max_len ??
+	while (s[len] != term && len < max_len)
 		len++;
-	return (len);
+	if (len == max_len)
+		return (0); /// ale kurva i kdyz bude EOF !!! vraci NULU
+	return (++len);
 }
 
-
+//Use following options:    Initialize: 'i';   Add: 'a';   Delete: 'd' 
 buf_node	*node_ops(buf_node *current, int fd, char option)
 {
 	buf_node	*node;
@@ -91,8 +74,8 @@ buf_node	*node_ops(buf_node *current, int fd, char option)
 	if (option == 'd') // delete current, return pointer to the current->next
 	{
 		node = current->next;
+		printf("node at %p deleted\n", current);
 		free (current);
-		printf("node deleted\n");
 		return (node);
 	}
 	node = calloc(1, sizeof(buf_node));// fill with zeros
@@ -102,13 +85,37 @@ buf_node	*node_ops(buf_node *current, int fd, char option)
 	if (option == 'i')// INITIALIZE Head Node 
 	{
 		node->next = NULL;
-		printf("node initialized\n");
+		printf("node initialized at %p\n", node);
 	}
 	else if (option == 'a')// APPEND Node / insert
 	{
 		node->next = current->next;
 		current->next = node;
-		printf("node added\n");
+		printf("node added at %p\n", node);
+	}
+	return (node);
+}
+
+static fd_list	*fd_list_ops(fd_list *current, int fd, char option)
+{
+	fd_list	*node;
+
+	if (option == 'd') // delete current, return pointer to the current->next
+	{
+		node = current->next;
+		free (current);
+		return (node);
+	}
+	node = calloc(1, sizeof(fd_list));// fill with zeros
+	if (NULL == node)
+		return (NULL);
+	node->head = node_ops(NULL, fd, 'i');
+	if (option == 'i')// INITIALIZE Head Node 
+		node->next = NULL;
+	else if (option == 'a')// APPEND Node / insert
+	{
+		node->next = current->next;
+		current->next = node;
 	}
 	return (node);
 }

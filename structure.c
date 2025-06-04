@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/06/03 01:12:39 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/06/04 16:10:47 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,24 +17,13 @@
 #include <string.h>
 #include "./get_next_line.h"
 
-void	*ft_memset(void *s, int c, size_t n)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < n)
-	{
-		((unsigned char *)s)[i] = c;
-		i++;
-	}
-	return (s);
-}
-
 void	*ft_calloc(size_t nmemb, size_t size)
 {
 	void	*ptr;
 	size_t	total_size;
-
+	size_t	i;
+	
+	i = 0;
 	if (nmemb == 0 || size == 0)
 	{
 		ptr = malloc(0);
@@ -46,9 +35,14 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	ptr = malloc(total_size);
 	if (ptr == NULL)
 		return (NULL);
-	ft_memset(ptr, 0, total_size); // copy the function code here to save one function
+	while (i < total_size)
+	{
+		((unsigned char *)ptr)[i] = 0;
+		i++;
+	}
 	return (ptr);
 }
+
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
 	size_t	i;
@@ -64,33 +58,6 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (dest);
 }
 
-void	*ft_memmove(void *dest, const void *src, size_t n)
-{
-	char	*temp_dest;
-	char	*temp_src;
-
-	if (dest == NULL && src == NULL && n > 0)
-		return (NULL);
-	temp_dest = (char *)dest;
-	temp_src = (char *)src;
-	if (!dest && !src)
-		return (0);
-	if (dest <= src)
-	{
-		while (n--)
-			*temp_dest++ = *temp_src++;
-	}
-	else if (dest > src)
-	{
-		temp_dest += n - 1;
-		temp_src += n - 1;
-		while (n--)
-		{
-			*temp_dest-- = *temp_src--;
-		}
-	}
-	return (dest);
-}
 // Returns length including character specified in char term. If not found returns 0
 size_t	linelen(const char *s, char term, size_t max_len)
 {
@@ -104,7 +71,7 @@ size_t	linelen(const char *s, char term, size_t max_len)
 	return (++len);
 }
 
-
+//Use following options:    Initialize: 'i';   Add: 'a';   Delete: 'd' 
 buf_node	*node_ops(buf_node *current, int fd, char option)
 {
 	buf_node	*node;

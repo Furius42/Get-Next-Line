@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:54:27 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/23 18:23:52 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/06/04 16:21:03 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,7 @@
 # define MAX_FDS 1024//	per process soft limit in Linux is 1024 // 
 #endif*/
 
-
 # include <stdio.h>		// REMOVE DEBUG ONLY // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 
 # include <stdlib.h>	// malloc, free
 # include <stddef.h>	// size_t
@@ -44,11 +42,10 @@ typedef struct s_fd_list {
 
 char			*get_next_line(int fd);
 
-void			*ft_memset(void *s, int c, size_t n);
-void			*ft_memmove(void *dest, const void *src, size_t n);
-void			*ft_calloc(size_t nmemb, size_t size);
+static fd_list	*fd_list_ops(fd_list *current, int fd, char option);
 buf_node		*node_ops(buf_node *current, int fd, char option);
+void			*ft_calloc(size_t nmemb, size_t size);
+void			*ft_memcpy(void *dest, const void *src, size_t n);
 size_t			linelen(const char *s, char term, size_t max_len);
-
 
 #endif

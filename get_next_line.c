@@ -6,35 +6,12 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:51:18 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/20 18:20:03 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/06/04 16:17:32 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./get_next_line.h"
 
-static fd_list	*fd_list_ops(fd_list *current, int fd, char option)
-{
-	fd_list	*node;
-
-	if (option == 'd') // delete current, return pointer to the current->next
-	{
-		node = current->next;
-		free (current);
-		return (node);
-	}
-	node = calloc(1, sizeof(fd_list));// fill with zeros
-	if (NULL == node)
-		return (NULL);
-	node->head = node_ops(NULL, fd, 'i');
-	if (option == 'i')// INITIALIZE Head Node 
-		node->next = NULL;
-	else if (option == 'a')// APPEND Node / insert
-	{
-		node->next = current->next;
-		current->next = node;
-	}
-	return (node);
-}
 // UPDATE FOR LINKED LIST !! NOW IT IS WRITTEN FOR ARRAY.. 
 static buf_node	*get_node(fd_list *fd_buffers, int fd)
 {
@@ -58,7 +35,7 @@ static buf_node	*get_node(fd_list *fd_buffers, int fd)
 	return (node_ops(current, fd, 'i'));
 }
 // should this be static ?  NORME SAYS YES :D
-static char	*compose_line(buf_node *current)
+char	*compose_line(buf_node *current)
 {
 	printf("compose line\n");
 	char		*line;
@@ -68,71 +45,63 @@ static char	*compose_line(buf_node *current)
 	int			BS;
 	int			copy_len;
 	buf_node 	*fd_head;
-
 	BS = BUFFER_SIZE;
 	len = 0;
-	i = 0;
 	fd_head = current;
 	copy_len = 0;
 	// load buffer(s)
 	while ((bytes_read = read(current->fd, current->buf + current->buf_len, BS - current->buf_len)) > 0)
 	{
+		printf("Read of: %i/%li from FD%i to %p\n", bytes_read, (BS - current->buf_len), current->fd, current->buf + current->buf_len);
 		current->buf_len += bytes_read;
-		len += linelen(current->buf, '\n', current->buf_len); // line length limited by EOF(calculated) or determined by '\n' character
-
-		if (len % BS == 0)// IF Buffer loaded in full since no \n nor EOF found in this batch
-			current = node_ops(current, current->fd, 'a');//append node, set it to current if buffer fully loaded, no EOF nor \n found
-		else//Found \n or EOF in this node->buf
+		i = linelen(current->buf, '\n', current->buf_len); // line length limited by EOF(calculated) or determined by '\n' character
+		if (i == 0)// Buffer loaded in full no \n found
+			{
+			len += current->buf_len;
+			if(current->buf_len == BS)
+				current = node_ops(current, current->fd, 'a');//append node, set it to current if buffer fully loaded, no EOF nor \n found
+			}
+		else// Found \n
+			{
+			len += i;
 			break;
+			}
 	}
+	i = 0;
 	if ((current->buf_len == 0 && bytes_read == 0) || bytes_read < 0 )// Check: read FAIL or EOF
-		return ((char*)node_ops(current, current->fd, 'd')); // delete node head on EOF or FAIL
-	current->buf_len = bytes_read - len % BS; // Set the size of future head's buffer to accomodate characters remaining after line extraction.
+		{
+			node_ops(current, current->fd, 'd');
+			printf("FAIL OR EOF");
+			return (NULL); // delete node head on EOF or FAIL
+		}
+	current->buf_len -= (BS * !(len % BS) + (len % BS)); //current->buf_len = bytes_read - len % BS;  Set the size of future head's buffer to accomodate characters remaining after line extraction.
+	
 	if(!(line = malloc(len * sizeof(char) + 1)))
 		return (NULL);
 	current = fd_head;
+	printf("Current = %p len = %i\n", current, len);
 	while (i * BS < len) 
 		{
 		copy_len = (len % BS) + (BS - (len % BS)) * (len / BS > i);
-		ft_memmove(line + BS * i, current->buf, copy_len);
-		if(i == len / BS)
+		ft_memcpy(line + BS * i, current->buf, copy_len);
+		if(!(current->next)) //last node in chain if line longer than BUFFER_SIZE
 		{
-			ft_memmove(fd_head->buf, current->buf + (len % BS), current->buf_len);
-			fd_head->buf_len = current->buf_len;
+			printf("Copy %li chars to current.buf: %p from current.buf+(len%%BS): %p \n", current->buf_len, current->buf, current->buf + (len % BS));
+			ft_memcpy(current->buf, current->buf + (len % BS), current->buf_len);
+			printf("Current.buf:\n%s^-- Leftover.buf len:%li\n", current->buf, current->buf_len);
+			if(current != fd_head)
+				ft_memcpy(fd_head, current, sizeof(buf_node));
+			line[len] = '\0';
+			return (line);
 		}
-		current = node_ops(current, current->fd, 'd');
+		//(current == fd_head && (current = current->next)) || (current = node_ops(current, current->fd, 'd'));
+		if(current != fd_head)
+			current = node_ops(current, current->fd, 'd');
+		else
+			current = current->next;
 		i++;
 		}
-	line[len] = '\0';
-	return (line);
 }
-
-
-/*
-
-Correct Flow (Reversed — Delete After)
-Here’s how you can do it safely:
-
-c
-Copy
-Edit
-current = fd_head;
-while (i * BS < len)
-{
-	int copy_len = (i == len / BS) ? len % BS : BS;
-	ft_memmove(line + BS * i, current->buf, copy_len);
-
-	if (i == len / BS) // Last buffer — move leftovers before deleting
-	{
-		ft_memmove(fd_head->buf, current->buf + (len % BS), current->buf_len);
-		fd_head->buf_len = current->buf_len;
-	}
-
-	current = node_ops(current, current->fd, 'd'); // Safe now
-	i++;
-}
-
-*/
 
 char	*get_next_line(int fd)
 {

@@ -5,13 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/24 14:52:57 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/05/23 11:24:29 by vhoracek         ###   ########.fr       */
+/*   Created: 2025/06/04 16:14:23 by vhoracek          #+#    #+#             */
+/*   Updated: 2025/06/04 16:21:34 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fcntl.h>
-#include <stdio.h>
 #include <errno.h>
 #include <string.h>
 #include "./get_next_line.h"
@@ -41,15 +40,15 @@ int	main(int argc, char *argv[])
 			}
 		}
 	}
-	int i = 0;
+	int i = 1;
 	while((line = get_next_line(fd)))
 	{
-		printf("This is line %i:\n\n\033[32;1m%s\033[0m|", i++, line);
+		printf("\033[32;1mThis is line %i:\033[0m\n\033[30;1m%s\033[0m|\n", i++, line);
 		free(line);
 		if(i == 30)
 			return(0);
 	}
 	close(fd);
-	printf("==FINISHED==");
+	printf("==FINISHED==\n");
 	return (0);
 }
