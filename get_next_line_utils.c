@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/06/04 16:17:05 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/06/04 16:58:11 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	void	*ptr;
 	size_t	total_size;
 	size_t	i;
-	
+
 	i = 0;
 	if (nmemb == 0 || size == 0)
 	{
@@ -53,7 +53,7 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (dest);
 }
 
-// Returns length including character specified in char term. If not found returns 0
+// Returns length including character specified in char term.0 If not found
 size_t	linelen(const char *s, char term, size_t max_len)
 {
 	size_t	len;
@@ -62,32 +62,32 @@ size_t	linelen(const char *s, char term, size_t max_len)
 	while (s[len] != term && len < max_len)
 		len++;
 	if (len == max_len)
-		return (0); /// ale kurva i kdyz bude EOF !!! vraci NULU
+		return (0);
 	return (++len);
 }
 
 //Use following options:    Initialize: 'i';   Add: 'a';   Delete: 'd' 
-buf_node	*node_ops(buf_node *current, int fd, char option)
+t_buf_node	*node_ops(t_buf_node *current, int fd, char option)
 {
-	buf_node	*node;
+	t_buf_node	*node;
 
-	if (option == 'd') // delete current, return pointer to the current->next
+	if (option == 'd')
 	{
 		node = current->next;
 		printf("node at %p deleted\n", current);
 		free (current);
 		return (node);
 	}
-	node = calloc(1, sizeof(buf_node));// fill with zeros
+	node = calloc(1, sizeof(t_buf_node));
 	if (NULL == node)
 		return (NULL);
 	node->fd = fd;
-	if (option == 'i')// INITIALIZE Head Node 
+	if (option == 'i')
 	{
 		node->next = NULL;
 		printf("node initialized at %p\n", node);
 	}
-	else if (option == 'a')// APPEND Node / insert
+	else if (option == 'a')
 	{
 		node->next = current->next;
 		current->next = node;
@@ -96,23 +96,23 @@ buf_node	*node_ops(buf_node *current, int fd, char option)
 	return (node);
 }
 
-static fd_list	*fd_list_ops(fd_list *current, int fd, char option)
+static t_fd_list	*fd_list_ops(t_fd_list *current, int fd, char option)
 {
-	fd_list	*node;
+	t_fd_list	*node;
 
-	if (option == 'd') // delete current, return pointer to the current->next
+	if (option == 'd')
 	{
 		node = current->next;
 		free (current);
 		return (node);
 	}
-	node = calloc(1, sizeof(fd_list));// fill with zeros
+	node = calloc(1, sizeof(t_fd_list));
 	if (NULL == node)
 		return (NULL);
 	node->head = node_ops(NULL, fd, 'i');
-	if (option == 'i')// INITIALIZE Head Node 
+	if (option == 'i')
 		node->next = NULL;
-	else if (option == 'a')// APPEND Node / insert
+	else if (option == 'a')
 	{
 		node->next = current->next;
 		current->next = node;
