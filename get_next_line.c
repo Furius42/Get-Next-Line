@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:51:18 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/06/07 23:50:33 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/06/08 00:44:08 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,11 @@ char	*parse_line(char *line, t_buf_node *fd_head, int len)
 		if(!(current->next))
 		{
 			printf("Copy %li chars to current.buf: %p from current.buf+(len%%BUFFER_SIZE): %p \n", current->buf_len, current->buf, current->buf + (len % BUFFER_SIZE));
-			ft_memcpy(current->buf, current->buf + (len % BUFFER_SIZE), current->buf_len);
+			if (current->buf_len != BUFFER_SIZE)//no leftover to save for the next line..
+				ft_memcpy(current->buf, current->buf + (len % BUFFER_SIZE), current->buf_len);
 			printf("Current.buf:\n%s^-- Leftover.buf len:%li\n", current->buf, current->buf_len);
 			if(current != fd_head)
-				ft_memcpy(fd_head, current, sizeof(t_buf_node));
+				ft_memcpy(fd_head->buf, current->buf, current->buf_len);
 			line[len] = '\0';
 			return (line);
 		}
