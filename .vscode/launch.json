@@ -9,7 +9,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/a.out",
-      "args": ["end.txt"],
+      "args": ["new.txt"],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
       "environment": [],
@@ -25,6 +25,5 @@
       "preLaunchTask": "build",
       "miDebuggerPath": "gdb"
     }
-
-	]
+  ]
 }

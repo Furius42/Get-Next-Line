@@ -51,10 +51,11 @@
       "args": [
         "-g", 
         "-O0",
+        "main.c",
+		"get_next_line.c",
+		"get_next_line_utils.c",
         "-D",
-		"BUFFER_LENGTH=15",
-        "structure.c"
-
+		"BUFFER_SIZE=15"
 	],
       "group": {
         "kind": "build",

@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/06/07 01:51:29 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/06/07 18:13:48 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ buf_node	*node_ops(buf_node *current, int fd, char option)
 }
 
 
-static fd_list	*fd_list_ops(fd_list *current, int fd, char option)
+fd_list	*fd_list_ops(fd_list *current, int fd, char option)
 {
 	fd_list	*node;
 
