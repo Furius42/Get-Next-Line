@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/06/04 16:10:47 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/06/07 01:51:29 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
-#include "./get_next_line.h"
+#include "./structure.h"
 
 void	*ft_calloc(size_t nmemb, size_t size)
 {

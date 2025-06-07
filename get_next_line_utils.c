@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/06/04 16:58:11 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/06/07 00:07:40 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ t_buf_node	*node_ops(t_buf_node *current, int fd, char option)
 	return (node);
 }
 
-static t_fd_list	*fd_list_ops(t_fd_list *current, int fd, char option)
+t_fd_list	*fd_list_ops(t_fd_list *current, int fd, char option)
 {
 	t_fd_list	*node;
 
