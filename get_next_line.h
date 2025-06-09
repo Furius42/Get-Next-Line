@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:54:27 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/06/07 18:35:04 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/06/09 13:15:02 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ typedef struct s_fd_list
 	struct s_fd_list	*next;
 }	t_fd_list;
 
-char				*get_next_line(int fd);
+char		*get_next_line(int fd);
 
 t_fd_list	*fd_list_ops(t_fd_list *current, int fd, char option);
 t_buf_node	*node_ops(t_buf_node *current, int fd, char option);

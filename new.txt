@@ -8,8 +8,8 @@ tab:
 empty:
 
 new '\n'
-tex133\n7 '\0'
-fewEmpty:
+text is a bit longer133\n7 '\0'
+4EmptyLines:
 
 
 

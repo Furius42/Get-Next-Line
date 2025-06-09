@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/06/07 18:24:43 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/06/09 17:30:45 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ t_buf_node	*node_ops(t_buf_node *current, int fd, char option)
 	if (option == 'd')
 	{
 		node = current->next;
+		current->next = NULL;
 		printf("node at %p deleted\n", current);
 		free (current);
 		return (node);
