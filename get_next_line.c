@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:51:18 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/06/09 22:03:35 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/06/10 23:59:39 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,9 +124,20 @@ char	*get_next_line(int fd)
 {
 	static t_fd_list	*fd_buffers;
 	t_buf_node			*node;
+	
+	char				*line;
 
 	if (fd_buffers == NULL)
 		fd_buffers = fd_list_ops(NULL, fd, 'i');
+	
 	node = get_node(fd_buffers, fd);
-	return (compose_line(node));
+	line = compose_line(node);
+	if (NULL == line)
+		{
+		while (fd_buffers->head->fd != fd)
+			{
+				
+			}
+		}
+	return ();
 }
