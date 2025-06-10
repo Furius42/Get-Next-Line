@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 23:02:06 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/06/09 17:30:45 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/06/11 01:04:14 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,8 @@ t_fd_list	*fd_list_ops(t_fd_list *current, int fd, char option)
 
 	if (option == 'd')
 	{
+//		while (current->head->fd != fd)
+//			current = current->next;
 		node = current->next;
 		free (current);
 		return (node);

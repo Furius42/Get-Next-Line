@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 16:14:23 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/06/09 22:17:12 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/06/11 01:33:58 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@ int	main(int argc, char *argv[])
 {
 	char	*input;
 	char	*line;
+	char	*line2;
 	int		fd;
+	int		fd2;
 	
 	if (argc != 2)
 		return(printf("Give 1 argument: File name to get next line from or '0' for STDIN. Else lorem will be used.\n\n"));
@@ -29,6 +31,7 @@ int	main(int argc, char *argv[])
 	else 
 	{
 	fd = open(input, O_RDONLY);
+	fd2 = open("end.txt", O_RDONLY);
 	if (fd == -1)
 		{
 		fprintf(stderr, "Opening %s failed. Reason: %s\n", input, strerror(errno));
@@ -41,14 +44,21 @@ int	main(int argc, char *argv[])
 		}
 	}
 	int i = 1;
-	while((line = get_next_line(fd)))
+	int j = 1;
+	while(1)
 	{
+		if (!line && !line2)
+			break;
+		line = get_next_line(fd);
 		printf("\033[32;1mThis is line %i:\033[0m\n\033[30;1m%s\033[0m|\n", i++, line);
 		free(line);
-		if(i == 30)
-			return(0);
+
+		line2 = get_next_line(fd2);
+		printf("\033[35;1mThis is line2 %i:\033[0m\n\033[30;1m%s\033[0m|\n", j++, line2);
+		free(line2);
 	}
 	close(fd);
+	close(fd2);
 	printf("==FINISHED==\n");
 	return (0);
 }

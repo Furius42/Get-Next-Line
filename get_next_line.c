@@ -6,24 +6,12 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:51:18 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/06/10 23:59:39 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/06/11 01:08:21 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./get_next_line.h"
 
-/*
-	while (current)
-	{
-		if (current->fd == fd)
-			if (current->buf == 0)
-				return(node_ops(current, fd, 'd'));
-			return(current);
-		else
-			current = fd_buffers->head->next;
-	}
-*/
-// UPDATE FOR LINKED LIST !! NOW IT IS WRITTEN FOR ARRAY.. 
 t_buf_node	*get_node(t_fd_list *fd_buffers, int fd)
 {
 	printf("get node\n");
@@ -64,10 +52,7 @@ ssize_t	read_into_buf(t_buf_node *current)
 				current = node_ops(current, current->fd, 'a');
 		}
 		else
-		{
-			len += i;
-			return (len);
-		}
+			return (len += i);
 	}
 }
 
@@ -86,7 +71,6 @@ char	*parse_line(char *line, t_buf_node *fd_head, int len)
 		if (!(current->next))
 		{
 			printf("Copy %li chars to fd_head->buf: %p from current.buf+(len%%BUFFER_SIZE): %p \n", fd_head->buf_len, fd_head->buf, current->buf + (len % BUFFER_SIZE));
-			//if (current->buf_len != BUFFER_SIZE)//no leftover to save for the next line..
 			ft_memcpy(fd_head->buf, current->buf + (len % BUFFER_SIZE), fd_head->buf_len);
 			printf("fd_head->buf:\n%s^-- Leftover.buf len:%li\n", fd_head->buf, fd_head->buf_len);
 			fd_head->next = NULL;
@@ -124,7 +108,6 @@ char	*get_next_line(int fd)
 {
 	static t_fd_list	*fd_buffers;
 	t_buf_node			*node;
-	
 	char				*line;
 
 	if (fd_buffers == NULL)
@@ -133,11 +116,6 @@ char	*get_next_line(int fd)
 	node = get_node(fd_buffers, fd);
 	line = compose_line(node);
 	if (NULL == line)
-		{
-		while (fd_buffers->head->fd != fd)
-			{
-				
-			}
-		}
-	return ();
+		fd_list_ops(fd_buffers, fd, 'd');
+	return (line);
 }
