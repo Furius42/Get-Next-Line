@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:51:18 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/06/11 01:08:21 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/06/14 01:47:52 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,21 @@
 t_buf_node	*get_node(t_fd_list *fd_buffers, int fd)
 {
 	printf("get node\n");
-	t_buf_node	*current;
-	current = fd_buffers->head;
-	if (NULL == current)
-		return (node_ops(current, fd, 'i'));
-	while (current)
+	t_fd_list	*current_list;
+
+	current_list = fd_buffers;
+//	if (NULL == current)
+//		return (node_ops(current, fd, 'i'));
+	while (current_list->head->fd != fd)
 	{
-		if (current->fd == fd)
-			return (current);
-		else
-			current = fd_buffers->head->next;
+		if (!(current_list->next))
+		{
+			current_list = fd_list_ops(current_list, fd, 'a');
+			return (current_list->head);
+		}
+		current_list = current_list->next;
 	}
-	return (node_ops(current, fd, 'i'));
+	return (current_list->head);
 }
 
 //returns LEN
