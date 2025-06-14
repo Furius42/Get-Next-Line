@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:51:18 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/06/14 01:47:52 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/06/14 02:11:21 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,21 @@
 t_buf_node	*get_node(t_fd_list *fd_buffers, int fd)
 {
 	printf("get node\n");
-	t_fd_list	*current_list;
+	t_fd_list	*current;
 
-	current_list = fd_buffers;
+	current = fd_buffers;
 //	if (NULL == current)
 //		return (node_ops(current, fd, 'i'));
-	while (current_list->head->fd != fd)
+	while (current->head->fd != fd)
 	{
-		if (!(current_list->next))
+		if (!(current->next))
 		{
-			current_list = fd_list_ops(current_list, fd, 'a');
-			return (current_list->head);
+			current = fd_list_ops(current, fd, 'a');
+			return (current->head);
 		}
-		current_list = current_list->next;
+		current = current->next;
 	}
-	return (current_list->head);
+	return (current->head);
 }
 
 //returns LEN
@@ -118,6 +118,7 @@ char	*get_next_line(int fd)
 	
 	node = get_node(fd_buffers, fd);
 	line = compose_line(node);
+	// what if just one of bunch of FDs finish? well thats the caller's problem. 
 	if (NULL == line)
 		fd_list_ops(fd_buffers, fd, 'd');
 	return (line);
