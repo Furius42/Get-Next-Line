@@ -6,7 +6,7 @@
 /*   By: vhoracek <vhoracek@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 22:51:18 by vhoracek          #+#    #+#             */
-/*   Updated: 2025/06/14 02:11:21 by vhoracek         ###   ########.fr       */
+/*   Updated: 2025/06/17 23:16:54 by vhoracek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,11 @@ ssize_t	read_into_buf(t_buf_node *current)
 	len = 0;
 	while (1)
 	{
+		printf("while 1\n");
 		b_read = read(current->fd, current->buf + current->buf_len,
 				BUFFER_SIZE - current->buf_len);
+//		if (b_read == 0)
+//			return (current->buf_len);
 		current->buf_len += b_read;
 		i = linelen(current->buf, '\n', current->buf_len);
 		if (i == 0)
@@ -99,7 +102,7 @@ char	*compose_line(t_buf_node *current)
 	len = read_into_buf(fd_head);
 	if (len == -1)
 		return (NULL);
-	fd_head->buf_len -= (BUFFER_SIZE * !(len % BUFFER_SIZE)) + (len % BUFFER_SIZE);//eded curr to hed
+	fd_head->buf_len -= (BUFFER_SIZE * !(len % BUFFER_SIZE)) + (len % BUFFER_SIZE);
 	line = malloc(len * sizeof(char) + 1);
 	if (NULL == line)
 		return (NULL);
